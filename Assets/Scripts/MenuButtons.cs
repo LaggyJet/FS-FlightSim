@@ -4,14 +4,14 @@ using UnityEditor.SearchService;
 using UnityEngine.SceneManagement;
 
 public class MenuButtons : MonoBehaviour {
-    [SerializeField] GameObject mainMenu, optionsMenu, gameModesMenu;
+    [SerializeField] GameObject mainMenu, settingsMenu, gameModesMenu;
     readonly List<GameObject> menus = new();
 
     void Awake() {
         if (mainMenu != null)
             menus.Add(mainMenu);
-        if (optionsMenu != null)
-            menus.Add(optionsMenu);
+        if (settingsMenu != null)
+            menus.Add(settingsMenu);
         if (gameModesMenu != null)
             menus.Add(gameModesMenu);
     }
@@ -20,7 +20,7 @@ public class MenuButtons : MonoBehaviour {
 
     public void PlayButton() { EnableMenu(gameModesMenu); }
     
-    public void OptionsButton() { EnableMenu(optionsMenu); }
+    public void SettingsButton() { EnableMenu(settingsMenu); }
 
     public void ExitButton() {
         #if UNITY_EDITOR

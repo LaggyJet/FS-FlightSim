@@ -11,4 +11,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/FreeFlight.unity
     guid: 5b7f1ffc033ee52439a3109a594cfcb4
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: f545962cc3e03604f9f38243794191cf, type: 2}

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class HelicopterController : MonoBehaviour {
     public float liftForce = 3500f, descendForce = 3500f, floatForce = 200f, rotationSpeed = 50f;
@@ -23,13 +24,6 @@ public class HelicopterController : MonoBehaviour {
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.Space) && !isSpinningDown && currentRotorSpeed < maxRotorSpeed) {
-            isSpinningUp = true;
-            spinUpTimer = spinUpTime;
-            currentRotorSpeed = 0f;
-        }
-        if (Input.GetKeyDown(KeyCode.X) && currentRotorSpeed > 0f && !isSpinningUp && isGrounded)
-            isSpinningDown = true;
         if (isSpinningUp) {
             spinUpTimer -= Time.deltaTime;
             currentRotorSpeed = Mathf.Lerp(0f, maxRotorSpeed, 1 - (spinUpTimer / spinUpTime));
@@ -52,18 +46,53 @@ public class HelicopterController : MonoBehaviour {
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, zRotation);
     }
 
+    bool isMovingUp = false;
+    bool isMovingDown = false;
+    bool isMovingLeft = false;
+    bool isMovingRight = false;
+    bool isMovingForward = false;
+    bool isMovingBackward = false;
+    bool isLeaningLeft = false;
+    bool isLeaningRight = false;
+
+    void OnUp(InputValue value) { isMovingUp = value.isPressed; isGrounded = false; }
+
+    void OnDown(InputValue value) { isMovingDown = value.isPressed; }
+
+    void OnLeft(InputValue value) { isMovingLeft = value.isPressed; }
+
+    void OnRight(InputValue value) { isMovingRight = value.isPressed; }
+
+    void OnForward(InputValue value) { isMovingForward = value.isPressed; }
+
+    void OnBackward(InputValue value) { isMovingBackward = value.isPressed; }
+
+    void OnLeanLeft(InputValue value) { isLeaningLeft = value.isPressed; }
+
+    void OnLeanRight(InputValue value) { isLeaningRight = value.isPressed; }
+
+    void OnLook(InputValue value) { CameraFollow.Instance.lookPos += (value.Get<Vector2>() * 3); }
+
+    void OnTurnOn(InputValue value) {
+        if (!isSpinningDown && currentRotorSpeed < maxRotorSpeed) {
+            isSpinningUp = true;
+            spinUpTimer = spinUpTime;
+            currentRotorSpeed = 0f;
+        }
+    }
+
+    void OnShutdown(InputValue value) { if (currentRotorSpeed > 0f && !isSpinningUp && isGrounded) isSpinningDown = true; }
+
     void FixedUpdate() {
         if (currentRotorSpeed >= maxRotorSpeed) {
-            rb.AddForce(Input.GetKey(KeyCode.W) ? Vector3.up * liftForce : Input.GetKey(KeyCode.S) ? Vector3.down * descendForce : Vector3.down * floatForce);
-            float forwardMovement = Input.GetKey(KeyCode.UpArrow) ? forwardSpeed : Input.GetKey(KeyCode.DownArrow) ? forwardSpeed / 2 : 0f;
-            if (forwardMovement != 0f)
-                rb.AddForce((Input.GetKey(KeyCode.UpArrow) ? 1 : -1) * transform.forward * forwardMovement);
-            xRotation = Mathf.Lerp(xRotation, Input.GetKey(KeyCode.UpArrow) ? maxXRotation : Input.GetKey(KeyCode.DownArrow) ? -maxXRotation : 0f, Time.deltaTime * pitchSpeed);
-            yRotation += Input.GetKey(KeyCode.A) ? -rotationSpeed * Time.deltaTime : Input.GetKey(KeyCode.D) ? rotationSpeed * Time.deltaTime : 0f;
-            zRotation += Input.GetKey(KeyCode.LeftArrow) ? rotationSpeed * Time.deltaTime : Input.GetKey(KeyCode.RightArrow) ? -rotationSpeed * Time.deltaTime : -zRotation * Time.deltaTime * rollSpeed;
+            rb.AddForce((isMovingUp ? Vector3.up : isMovingDown ? Vector3.down : Vector3.down) * (isMovingUp ? liftForce : isMovingDown ? descendForce : floatForce));
+            rb.AddForce((isMovingForward ? transform.forward : isMovingBackward ? -transform.forward * 0.5f : Vector3.zero) * forwardSpeed);
+            xRotation = Mathf.Lerp(xRotation, isMovingForward ? maxXRotation : isMovingBackward ? -maxXRotation : 0f, Time.fixedDeltaTime * pitchSpeed);
+            yRotation += (isMovingLeft ? -rotationSpeed : isMovingRight ? rotationSpeed : 0f) * Time.fixedDeltaTime;
+            zRotation += (isLeaningLeft ? rotationSpeed : isLeaningRight ? -rotationSpeed : -zRotation * rollSpeed) * Time.fixedDeltaTime;
             zRotation = Mathf.Clamp(zRotation, -maxZRotation, maxZRotation);
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
-                rb.AddForce((Input.GetKey(KeyCode.LeftArrow) ? -1 : 1) * transform.right * forwardSpeed / 2);
+            if (isLeaningLeft || isLeaningRight)
+                rb.AddForce((isLeaningLeft ? -1 : 1) * transform.right * forwardSpeed / 2);
         }
     }
 

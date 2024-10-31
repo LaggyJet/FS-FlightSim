@@ -6,7 +6,7 @@ public class HelicopterPartCollisionHandler : MonoBehaviour {
     public PartType partType;
 
     private void OnTriggerEnter(Collider other) {
-        if (!other.transform.IsChildOf(transform))
+        if (!other.transform.IsChildOf(transform) && !other.CompareTag("BoundingWall"))
             helicopterController.HandlePartCollision(partType, other);
     }
 }

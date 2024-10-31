@@ -31,9 +31,9 @@ public class MenuButtons : MonoBehaviour {
 
     public void BackButton() { EnableMenu(mainMenu); }
 
-    public void TimeAttackButton() { }
+    public void TimeAttackButton() { SceneManager.LoadScene("MainScene"); Settings.Instance.selectedGameMode = Settings.GameMode.TimeAttack; }
 
-    public void FreeFlightButton() { SceneManager.LoadScene("FreeFlight"); }
+    public void FreeFlightButton() { SceneManager.LoadScene("MainScene"); Settings.Instance.selectedGameMode = Settings.GameMode.FreeFlight; }
 
-    public void ObstacleCourseButton() { }
+    public void ObstacleCourseButton() { SceneManager.LoadScene("MainScene"); Settings.Instance.selectedGameMode = Settings.GameMode.ObstacleCourse; }
 }

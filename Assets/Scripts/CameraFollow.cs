@@ -4,11 +4,11 @@ using UnityEngine.InputSystem;
 public class CameraFollow : MonoBehaviour {
     public static CameraFollow Instance { get; private set; }
     public Transform target;
-    public Vector3 offset = new Vector3(-0.275878906f, 7.25f, -7.35939026f);
-    public float mouseSensitivity = 100f;
-    private float pitch = 0f; 
-    private float yaw = 0f;
+    public float mouseSensitivity = 50f;
     public Vector2 lookPos;
+
+    float pitch = 0f;
+    float yaw = 0f;
 
     void Awake() {
         if (Instance != null && Instance != this)
@@ -24,18 +24,22 @@ public class CameraFollow : MonoBehaviour {
         Cursor.visible = false;
     }
 
-    void Update() { if (Mouse.current != null) lookPos += Mouse.current.delta.ReadValue(); }
+    void Update() { 
+        if (Mouse.current != null) lookPos += Mouse.current.delta.ReadValue();
+        if (Gamepad.current != null) {
+            Vector2 curval = Gamepad.current.rightStick.ReadValue();
+            yaw += curval.x;
+            pitch += curval.y;
+        }
+    }
 
     void LateUpdate() {
         if (target != null) {
-            float mouseX = lookPos.x * mouseSensitivity * Time.deltaTime;
-            float mouseY = lookPos.y * mouseSensitivity * Time.deltaTime;
-            yaw += mouseX;
-            pitch += mouseY;
-            pitch = Mathf.Clamp(pitch, -85f, 85f); 
-            float targetYRotation = target.eulerAngles.y;
-            Quaternion rotation = Quaternion.Euler(pitch, targetYRotation + yaw, 0f);
-            transform.position = target.position + rotation * offset;
+            yaw += lookPos.x * mouseSensitivity * Time.deltaTime;
+            pitch += lookPos.y * mouseSensitivity * Time.deltaTime;
+            pitch = Mathf.Clamp(pitch, 0f, 80f);
+            Vector3 v = Quaternion.Euler(pitch, target.eulerAngles.y + yaw, 0f) * new Vector3(1.5f, 1.5f, 1.5f);
+            transform.position = target.position + v;
             transform.LookAt(target.position);
             lookPos = Vector2.zero;
         }

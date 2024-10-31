@@ -10,7 +10,6 @@ public class HelicopterController : MonoBehaviour {
     public float damageSpeedThreshold = 2f;
     public float skiDamageSpeedThreshold = 3f;
     public Transform mainRotor, tailRotor;
-
     private Rigidbody rb;
     private float xRotation, zRotation, yRotation, spinUpTimer, currentRotorSpeed;
     private bool isSpinningUp, isSpinningDown, isGrounded;
@@ -44,6 +43,27 @@ public class HelicopterController : MonoBehaviour {
             tailRotor.Rotate(Vector3.right, currentRotorSpeed * Time.deltaTime);
         }
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, zRotation);
+
+
+        //print(Input.GetAxis("Horizontal"));
+
+        //var gamepad = Gamepad.current;
+        ////Debug.Log(string.Join("\n", Gamepad.all));
+        //if (gamepad == null)
+        //{
+        //    //Debug.Log("no gamepad");
+        //    return; // No gamepad connected.
+        //}
+
+        //if (gamepad.rightTrigger.wasPressedThisFrame)
+        //{
+        //    Debug.Log("Right trigger pressed");
+        //}
+
+        //Vector2 move = gamepad.leftStick.ReadValue();
+        //{
+        //    Debug.Log(move);
+        //}
     }
 
     bool isMovingUp = false;
@@ -71,7 +91,7 @@ public class HelicopterController : MonoBehaviour {
 
     void OnLeanRight(InputValue value) { isLeaningRight = value.isPressed; }
 
-    void OnLook(InputValue value) { CameraFollow.Instance.lookPos += (value.Get<Vector2>() * 3); }
+    //void OnLook(InputValue value) { CameraFollow.Instance.lookPos += (value.Get<Vector2>() * 3); }
 
     void OnTurnOn(InputValue value) {
         if (!isSpinningDown && currentRotorSpeed < maxRotorSpeed) {

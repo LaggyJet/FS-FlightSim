@@ -29,6 +29,10 @@ public class MenuButtons : MonoBehaviour {
         #endif
     }
 
+    public void ContinueGame() { GameManager.Instance.ResumeGame(); }
+
+    public void ReturnHome() { SceneManager.LoadScene("MainMenu"); }
+
     public void BackButton() { EnableMenu(mainMenu); }
 
     public void TimeAttackButton() { SceneManager.LoadScene("MainScene"); Settings.Instance.selectedGameMode = Settings.GameMode.TimeAttack; }

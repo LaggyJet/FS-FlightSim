@@ -103,6 +103,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "PauseResume",
+                    "type": "Button",
+                    "id": "7db0534a-aa77-4bae-bd1a-4e17c3c9ceaf",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -510,6 +519,39 @@
                     "processors": "",
                     "groups": ";FlightStick",
                     "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e054253e-da33-40b9-a3fc-3f20ad4c1418",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard",
+                    "action": "PauseResume",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c478b4cb-3e92-4e0a-af94-a7e946e41f8a",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "PauseResume",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "12473b95-c1d9-4500-8fe4-129065d46d24",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";FlightStick",
+                    "action": "PauseResume",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class MissileLauncher : MonoBehaviour {
     public static MissileLauncher Instance { get; private set; }
 
-    [SerializeField] GameObject missile;
+    [SerializeField] GameObject missile, warningTextContainter;
     [SerializeField] TMP_Text warningText, countdownText;
     [SerializeField] float warningDuration = 5f;
 
@@ -33,19 +33,22 @@ public class MissileLauncher : MonoBehaviour {
     }
 
     IEnumerator WarningSequence() {
+        warningTextContainter.SetActive(true);
         countdown = warningDuration;
-        //warningText.text = "Entering restricted airspace, lower altitude or be shot down.";
-        //warningText.color = Color.red;
-        //countdownText.gameObject.SetActive(true);
+        warningText.text = "Entering restricted airspace, lower altitude or be shot down.";
+        warningText.color = Color.red;
+        countdownText.gameObject.SetActive(true);
+        countdownText.enabled = true;
         while (countdown > 0) {
-            //countdownText.text = countdown.ToString("F0");
-            //warningText.enabled = !warningText.enabled;
-            Debug.Log("warning: " + countdown);
+            countdownText.text = countdown.ToString("F0");
             yield return new WaitForSeconds(1f);
+            warningText.enabled = !warningText.enabled;
             countdown--;
         }
-        //countdownText.gameObject.SetActive(false);
-        //warningText.enabled = false;
+        countdownText.gameObject.SetActive(false);
+        warningText.enabled = true;
+        warningText.text = "Incoming Missile, lower altitiude.";
+        countdownText.enabled = false;
         ActivateMissile(); 
     }
 
@@ -53,11 +56,12 @@ public class MissileLauncher : MonoBehaviour {
         if (activeMissile != null) {
             activeMissile.SetActive(true);
             if (activeMissile.TryGetComponent<MissileTracker>(out var missileTracker))
-                missileTracker.SetTarget(target); 
+                missileTracker.SetTarget(target);
         }
     }
 
     public void CancelMissile(GameObject trackedObject) {
+        warningTextContainter.SetActive(false);
         if (activeMissile != null && target == trackedObject) {
             if (activeMissile.TryGetComponent<MissileTracker>(out var missileTracker))
                 missileTracker.SetTarget(null);

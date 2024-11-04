@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class HelicopterController : MonoBehaviour {
-    [SerializeField] float liftForce = 3500f, descendForce = 3500f, floatForce = 200f, rotationSpeed = 50f;
-    [SerializeField] float maxXRotation = 30f, maxZRotation = 45f, forwardSpeed = 4000f;
+    [SerializeField] float liftForce = 500f, descendForce = 500f, floatForce = 40f, rotationSpeed = 50f;
+    [SerializeField] float maxXRotation = 30f, maxZRotation = 45f, forwardSpeed = 800f;
     [SerializeField] float spinUpTime = 3f, maxRotorSpeed = 1000f, pitchSpeed = 1f, rollSpeed = 1f;
     [SerializeField] float crashSpeedThreshold = 1f;
     [SerializeField] float damageSpeedThreshold = 1f;
@@ -102,6 +103,9 @@ public class HelicopterController : MonoBehaviour {
     }
 
     void OnShutdown(InputValue value) { if (currentRotorSpeed > 0f && !isSpinningUp && isGrounded) isSpinningDown = true; }
+
+
+    void OnPauseResume(InputValue value) { (GameManager.Instance.isPaused ? (Action)GameManager.Instance.ResumeGame : GameManager.Instance.PauseGame)(); }
 
     void FixedUpdate() {
         if (currentRotorSpeed >= maxRotorSpeed) {

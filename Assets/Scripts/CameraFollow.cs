@@ -13,10 +13,8 @@ public class CameraFollow : MonoBehaviour {
     void Awake() {
         if (Instance != null && Instance != this)
             Destroy(gameObject);
-        else {
+        else
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
     }
 
     void Start() {
@@ -38,8 +36,7 @@ public class CameraFollow : MonoBehaviour {
             yaw += lookPos.x * mouseSensitivity * Time.deltaTime;
             pitch += lookPos.y * mouseSensitivity * Time.deltaTime;
             pitch = Mathf.Clamp(pitch, 0f, 80f);
-            Vector3 v = Quaternion.Euler(pitch, target.eulerAngles.y + yaw, 0f) * new Vector3(1.5f, 1.5f, 1.5f);
-            transform.position = target.position + v;
+            transform.position = target.position + Quaternion.Euler(pitch, target.eulerAngles.y + yaw, 0f) * new Vector3(0.75f, 0.75f, 0.75f);
             transform.LookAt(target.position);
             lookPos = Vector2.zero;
         }

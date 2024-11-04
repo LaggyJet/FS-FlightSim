@@ -3,14 +3,14 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
     public static GameManager Instance {  get; private set; }
     [SerializeField] GameObject[] modes;
+    [SerializeField] GameObject pauseMenu, background;
+    public bool isPaused = false;
 
     void Awake() {
         if (Instance != null && Instance != this)
             Destroy(gameObject);
-        else {
+        else
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
         EnableGameMode(Settings.GameMode.None); 
     }
 
@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour {
             default:
                 break;
         }
+        ResumeGame();
     }
 
     void EnableGameMode(Settings.GameMode gameMode) {
@@ -37,5 +38,23 @@ public class GameManager : MonoBehaviour {
             else
                 mode.SetActive(false);
         }
+    }
+
+    public void PauseGame() {
+        isPaused = true;
+        background.SetActive(true);
+        pauseMenu.SetActive(isPaused);
+        Time.timeScale = 0;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
+    }
+
+    public void ResumeGame() {
+        isPaused = false;
+        background.SetActive(false);
+        pauseMenu.SetActive(isPaused);
+        Time.timeScale = 1;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }

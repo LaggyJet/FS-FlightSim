@@ -5,8 +5,10 @@ public class HelicopterPartCollisionHandler : MonoBehaviour {
     public enum PartType { Rotor, Body, SkiL, SkiR }
     public PartType partType;
 
-    private void OnTriggerEnter(Collider other) {
-        if (!other.transform.IsChildOf(transform) && !other.CompareTag("BoundingWall"))
+    void OnTriggerEnter(Collider other) {
+        if (other.CompareTag("Missile"))
+            helicopterController.Explode();
+        else if (!other.transform.IsChildOf(transform) && !other.CompareTag("BoundingWall"))
             helicopterController.HandlePartCollision(partType, other);
     }
 }

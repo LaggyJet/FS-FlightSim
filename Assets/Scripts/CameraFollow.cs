@@ -3,9 +3,9 @@ using UnityEngine.InputSystem;
 
 public class CameraFollow : MonoBehaviour {
     public static CameraFollow Instance { get; private set; }
-    public Transform target;
-    public float mouseSensitivity = 50f;
-    public Vector2 lookPos;
+    [SerializeField] Transform target;
+    [SerializeField] float mouseSensitivity = 50f;
+    [SerializeField] Vector2 lookPos;
 
     float pitch = 0f;
     float yaw = 0f;

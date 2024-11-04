@@ -3,16 +3,16 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class HelicopterController : MonoBehaviour {
-    public float liftForce = 3500f, descendForce = 3500f, floatForce = 200f, rotationSpeed = 50f;
-    public float maxXRotation = 30f, maxZRotation = 45f, forwardSpeed = 4000f;
-    public float spinUpTime = 3f, maxRotorSpeed = 1000f, pitchSpeed = 1f, rollSpeed = 1f;
-    public float crashSpeedThreshold = 5f;
-    public float damageSpeedThreshold = 2f;
-    public float skiDamageSpeedThreshold = 3f;
-    public Transform mainRotor, tailRotor;
-    private Rigidbody rb;
-    private float xRotation, zRotation, yRotation, spinUpTimer, currentRotorSpeed;
-    private bool isSpinningUp, isSpinningDown, isGrounded;
+    [SerializeField] float liftForce = 3500f, descendForce = 3500f, floatForce = 200f, rotationSpeed = 50f;
+    [SerializeField] float maxXRotation = 30f, maxZRotation = 45f, forwardSpeed = 4000f;
+    [SerializeField] float spinUpTime = 3f, maxRotorSpeed = 1000f, pitchSpeed = 1f, rollSpeed = 1f;
+    [SerializeField] float crashSpeedThreshold = 1f;
+    [SerializeField] float damageSpeedThreshold = 1f;
+    [SerializeField] float skiDamageSpeedThreshold = 1f;
+    [SerializeField] Transform mainRotor, tailRotor;
+    Rigidbody rb;
+    float xRotation, zRotation, yRotation, spinUpTimer, currentRotorSpeed;
+    bool isSpinningUp, isSpinningDown, isGrounded;
 
     void Start() {
         rb = GetComponent<Rigidbody>();
@@ -148,6 +148,10 @@ public class HelicopterController : MonoBehaviour {
             handler.partType = HelicopterPartCollisionHandler.PartType.SkiL;
         else if (child.name.ToLower().Contains("ski r"))
             handler.partType = HelicopterPartCollisionHandler.PartType.SkiR;
+    }
+
+    public void Explode() {
+        Debug.Log("Boom");
     }
 
     public void HandlePartCollision(HelicopterPartCollisionHandler.PartType partType, Collider collision) {

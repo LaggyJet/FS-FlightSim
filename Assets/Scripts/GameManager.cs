@@ -15,29 +15,14 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start() {
-        switch (Settings.Instance.selectedGameMode) {
-            case Settings.GameMode.TimeAttack:
-                EnableGameMode(Settings.GameMode.TimeAttack);
-                break;
-            case Settings.GameMode.FreeFlight:
-                EnableGameMode(Settings.GameMode.FreeFlight);
-                break;
-            case Settings.GameMode.ObstacleCourse:
-                EnableGameMode(Settings.GameMode.ObstacleCourse);
-                break;
-            default:
-                break;
-        }
+        EnableGameMode(Settings.Instance.selectedGameMode);
         ResumeGame();
     }
 
     void EnableGameMode(Settings.GameMode gameMode) {
-        foreach (var mode in modes) {
-            if (gameMode.ToString() == mode.ToString().Split(' ')[0])
-                mode.SetActive(true);
-            else
-                mode.SetActive(false);
-        }
+        foreach (var mode in modes)
+                mode.SetActive(gameMode.ToString() == mode.ToString().Split(' ')[0]);
+
     }
 
     public void PauseGame() {

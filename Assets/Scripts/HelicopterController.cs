@@ -44,27 +44,6 @@ public class HelicopterController : MonoBehaviour {
             tailRotor.Rotate(Vector3.right, currentRotorSpeed * Time.deltaTime);
         }
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, zRotation);
-
-
-        //print(Input.GetAxis("Horizontal"));
-
-        //var gamepad = Gamepad.current;
-        ////Debug.Log(string.Join("\n", Gamepad.all));
-        //if (gamepad == null)
-        //{
-        //    //Debug.Log("no gamepad");
-        //    return; // No gamepad connected.
-        //}
-
-        //if (gamepad.rightTrigger.wasPressedThisFrame)
-        //{
-        //    Debug.Log("Right trigger pressed");
-        //}
-
-        //Vector2 move = gamepad.leftStick.ReadValue();
-        //{
-        //    Debug.Log(move);
-        //}
     }
 
     bool isMovingUp = false;
@@ -92,8 +71,6 @@ public class HelicopterController : MonoBehaviour {
 
     void OnLeanRight(InputValue value) { isLeaningRight = value.isPressed; }
 
-    //void OnLook(InputValue value) { CameraFollow.Instance.lookPos += (value.Get<Vector2>() * 3); }
-
     void OnTurnOn(InputValue value) {
         if (!isSpinningDown && currentRotorSpeed < maxRotorSpeed) {
             isSpinningUp = true;
@@ -116,15 +93,14 @@ public class HelicopterController : MonoBehaviour {
             zRotation += (isLeaningLeft ? rotationSpeed : isLeaningRight ? -rotationSpeed : -zRotation * rollSpeed) * Time.fixedDeltaTime;
             zRotation = Mathf.Clamp(zRotation, -maxZRotation, maxZRotation);
             if (isLeaningLeft || isLeaningRight)
-                rb.AddForce((isLeaningLeft ? -1 : 1) * transform.right * forwardSpeed / 2);
+                rb.AddForce((isLeaningLeft ? -1 : 1) * forwardSpeed * transform.right / 2);
         }
     }
 
     void AssignCollisionHandlers() {
-        List<MeshCollider> childColliders = new List<MeshCollider>();
+        List<MeshCollider> childColliders = new();
         foreach (Transform child in GetComponentsInChildren<Transform>()) {
-            MeshCollider triggerCollider = child.GetComponent<MeshCollider>();
-            if (triggerCollider != null) {
+            if (child.TryGetComponent<MeshCollider>(out var triggerCollider)) {
                 triggerCollider.convex = true;
                 triggerCollider.isTrigger = true;
                 childColliders.Add(triggerCollider);
@@ -192,14 +168,16 @@ public class HelicopterController : MonoBehaviour {
     }
 
     void HandleSkiCollision(HelicopterPartCollisionHandler.PartType skiPart, Collider collision) {
-        RaycastHit hit;
-        if (Physics.Raycast(collision.transform.position, -Vector3.up, out hit)) {
+        if (Physics.Raycast(collision.transform.position, -Vector3.up, out RaycastHit hit))
+        {
             Vector3 collisionNormal = hit.normal;
-            if (Vector3.Dot(collisionNormal, Vector3.up) > 0.7f) {
+            if (Vector3.Dot(collisionNormal, Vector3.up) > 0.7f)
+            {
                 Debug.Log("Landing detected.");
                 isGrounded = true;
             }
-            else if (rb.velocity.magnitude > skiDamageSpeedThreshold) {
+            else if (rb.velocity.magnitude > skiDamageSpeedThreshold)
+            {
                 Debug.Log($"{skiPart} collision");
                 HandleSkiDamage(skiPart);
             }

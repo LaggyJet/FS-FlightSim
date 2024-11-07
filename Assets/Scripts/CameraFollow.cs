@@ -22,12 +22,16 @@ public class CameraFollow : MonoBehaviour {
         Cursor.visible = false;
     }
 
-    void Update() { 
+    void Update() {
         if (Mouse.current != null) lookPos += Mouse.current.delta.ReadValue();
         if (Gamepad.current != null) {
             Vector2 curval = Gamepad.current.rightStick.ReadValue();
             yaw += curval.x;
             pitch += curval.y;
+        }
+        if (Joystick.current != null) {
+            yaw += Input.GetAxis("HatX");
+            pitch += Input.GetAxis("HatY");
         }
     }
 
@@ -41,4 +45,6 @@ public class CameraFollow : MonoBehaviour {
             lookPos = Vector2.zero;
         }
     }
+
+    public void ChangeTarget(Transform newTarget) { target = newTarget; }
 }

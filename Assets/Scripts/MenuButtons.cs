@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 public class MenuButtons : MonoBehaviour {
-    [SerializeField] GameObject mainMenu, settingsMenu, gameModesMenu;
+    static public MenuButtons Instance {  get; private set; }
+    public GameObject mainMenu, settingsMenu, gameModesMenu;
     readonly List<GameObject> menus = new();
 
     void Awake() {
+        if (Instance != null && Instance != this)
+            Destroy(gameObject);
+        else
+            Instance = this;
         if (mainMenu != null)
             menus.Add(mainMenu);
         if (settingsMenu != null)
@@ -15,7 +20,7 @@ public class MenuButtons : MonoBehaviour {
             menus.Add(gameModesMenu);
     }
 
-    void EnableMenu(GameObject menu) { foreach (GameObject menu_ in menus) menu_.SetActive(menu == menu_); }
+    public void EnableMenu(GameObject menu) { foreach (GameObject menu_ in menus) menu_.SetActive(menu == menu_); }
 
     public void PlayButton() { EnableMenu(gameModesMenu); }
     
@@ -40,4 +45,15 @@ public class MenuButtons : MonoBehaviour {
     public void FreeFlightButton() { SceneManager.LoadScene("MainScene"); Settings.Instance.selectedGameMode = Settings.GameMode.FreeFlight; }
 
     public void ObstacleCourseButton() { SceneManager.LoadScene("MainScene"); Settings.Instance.selectedGameMode = Settings.GameMode.ObstacleCourse; }
+
+    public void RestartButton() {
+        switch (Settings.Instance.selectedGameMode) {
+            case Settings.GameMode.TimeAttack:
+                TimeAttackButton();
+                break;
+            case Settings.GameMode.ObstacleCourse:
+                ObstacleCourseButton();
+                break;
+        }
+    }
 }

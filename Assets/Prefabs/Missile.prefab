@@ -9774,6 +9774,7 @@ GameObject:
   - component: {fileID: 8124864688144852246}
   - component: {fileID: 3882495816585181042}
   - component: {fileID: 8398985339748647391}
+  - component: {fileID: 2658214031367975949}
   m_Layer: 0
   m_Name: Missile
   m_TagString: Missile
@@ -9834,3 +9835,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e819e9cdcef63a468e33573a9492d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!123 &2658214031367975949
+LensFlare:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9054222968871981659}
+  m_Enabled: 1
+  m_Flare: {fileID: 12100000, guid: 8541d94808d5849d8bfa480259334205, type: 2}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Brightness: 0.25
+  m_FadeSpeed: 600
+  m_IgnoreLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Directional: 0

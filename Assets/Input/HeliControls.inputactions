@@ -103,6 +103,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "PauseResume",
+                    "type": "Button",
+                    "id": "9b087042-7dba-40a9-a3ff-49a431007ea6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -439,7 +448,7 @@
                 {
                     "name": "",
                     "id": "c035118c-41e2-44bf-8c07-b3799812a8fc",
-                    "path": "<HID::Thrustmaster T.Flight Hotas X>/button11",
+                    "path": "<Button:/Thrustmaster T.Flight Hotas X/button11>",
                     "interactions": "",
                     "processors": "",
                     "groups": ";FlightStick",
@@ -510,6 +519,39 @@
                     "processors": "",
                     "groups": ";FlightStick",
                     "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0905f195-9ac9-441f-a9f2-2e410cc906b5",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard",
+                    "action": "PauseResume",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0efb6aa8-4fa4-4fa3-96e9-68e19b6971be",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "PauseResume",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6a4ed4a8-9467-46e8-9298-9a1d7e3d8333",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";FlightStick",
+                    "action": "PauseResume",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

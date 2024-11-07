@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,22 +9,38 @@ public class HelicopterController : MonoBehaviour {
     [SerializeField] float maxXRotation = 30f, maxZRotation = 45f, forwardSpeed = 800f;
     [SerializeField] float spinUpTime = 3f, maxRotorSpeed = 1000f, pitchSpeed = 1f, rollSpeed = 1f;
     [SerializeField] float crashSpeedThreshold = 1f;
-    [SerializeField] float damageSpeedThreshold = 1f;
-    [SerializeField] float skiDamageSpeedThreshold = 1f;
     [SerializeField] Transform mainRotor, tailRotor;
+    [SerializeField] GameObject destroyedHeliPrefab;
     Rigidbody rb;
     float xRotation, zRotation, yRotation, spinUpTimer, currentRotorSpeed;
     bool isSpinningUp, isSpinningDown, isGrounded;
 
     void Start() {
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true; 
+        rb.freezeRotation = true;
         AssignCollisionHandlers();
-        rb.isKinematic = false; 
-        rb.collisionDetectionMode = CollisionDetectionMode.Continuous; 
+        rb.isKinematic = false;
+        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
     }
 
     void Update() {
+        if (Joystick.current.wasUpdatedThisFrame) {
+            isMovingUp = Input.GetAxis("FwdBck") > 0.5f;
+            isMovingDown = Input.GetAxis("FwdBck") < -0.5f;
+            isMovingLeft = Input.GetAxis("Yaw") < -0.2f;
+            isMovingRight = Input.GetAxis("Yaw") > 0.2f;
+            isMovingForward = Input.GetAxis("Vertical") > 0.2f;
+            isMovingBackward = Input.GetAxis("Vertical") < -0.2f;
+            isLeaningLeft = Input.GetAxis("Horizontal") < -0.2f;
+            isLeaningRight = Input.GetAxis("Horizontal") > 0.2f;
+            if (Input.GetKeyDown(KeyCode.JoystickButton4))
+                OnTurnOn(null);
+            if (Input.GetKeyDown(KeyCode.JoystickButton5))
+                OnShutdown(null);
+            if (Input.GetKeyDown(KeyCode.JoystickButton10))
+                OnPauseResume(null);
+        }
+
         if (isSpinningUp) {
             spinUpTimer -= Time.deltaTime;
             currentRotorSpeed = Mathf.Lerp(0f, maxRotorSpeed, 1 - (spinUpTimer / spinUpTime));
@@ -46,14 +63,8 @@ public class HelicopterController : MonoBehaviour {
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, zRotation);
     }
 
-    bool isMovingUp = false;
-    bool isMovingDown = false;
-    bool isMovingLeft = false;
-    bool isMovingRight = false;
-    bool isMovingForward = false;
-    bool isMovingBackward = false;
-    bool isLeaningLeft = false;
-    bool isLeaningRight = false;
+    bool isMovingUp = false, isMovingDown = false, isMovingLeft = false, isMovingRight = false;
+    bool isMovingForward = false, isMovingBackward = false, isLeaningLeft = false, isLeaningRight = false;
 
     void OnUp(InputValue value) { isMovingUp = value.isPressed; isGrounded = false; }
 
@@ -72,6 +83,7 @@ public class HelicopterController : MonoBehaviour {
     void OnLeanRight(InputValue value) { isLeaningRight = value.isPressed; }
 
     void OnTurnOn(InputValue value) {
+        GameManager.Instance.startedGame = true;
         if (!isSpinningDown && currentRotorSpeed < maxRotorSpeed) {
             isSpinningUp = true;
             spinUpTimer = spinUpTime;
@@ -79,15 +91,21 @@ public class HelicopterController : MonoBehaviour {
         }
     }
 
-    void OnShutdown(InputValue value) { if (currentRotorSpeed > 0f && !isSpinningUp && isGrounded) isSpinningDown = true; }
-
+    void OnShutdown(InputValue value) { if (currentRotorSpeed > 0f && !isSpinningUp && isGrounded) { 
+            isSpinningDown = true;
+            if (GameManager.Instance.finishedObjectives)
+                GameManager.Instance.CallWinGame();
+        } 
+    }
 
     void OnPauseResume(InputValue value) { (GameManager.Instance.isPaused ? (Action)GameManager.Instance.ResumeGame : GameManager.Instance.PauseGame)(); }
 
     void FixedUpdate() {
         if (currentRotorSpeed >= maxRotorSpeed) {
             rb.AddForce((isMovingUp ? Vector3.up : isMovingDown ? Vector3.down : Vector3.down) * (isMovingUp ? liftForce : isMovingDown ? descendForce : floatForce));
-            rb.AddForce((isMovingForward ? transform.forward : isMovingBackward ? -transform.forward * 0.5f : Vector3.zero) * forwardSpeed);
+            Vector3 fwd = transform.forward;
+            fwd.y = 0;
+            rb.AddForce((isMovingForward ? fwd : isMovingBackward ? -fwd * 0.5f : Vector3.zero) * forwardSpeed);
             xRotation = Mathf.Lerp(xRotation, isMovingForward ? maxXRotation : isMovingBackward ? -maxXRotation : 0f, Time.fixedDeltaTime * pitchSpeed);
             yRotation += (isMovingLeft ? -rotationSpeed : isMovingRight ? rotationSpeed : 0f) * Time.fixedDeltaTime;
             zRotation += (isLeaningLeft ? rotationSpeed : isLeaningRight ? -rotationSpeed : -zRotation * rollSpeed) * Time.fixedDeltaTime;
@@ -101,14 +119,16 @@ public class HelicopterController : MonoBehaviour {
         List<MeshCollider> childColliders = new();
         foreach (Transform child in GetComponentsInChildren<Transform>()) {
             if (child.TryGetComponent<MeshCollider>(out var triggerCollider)) {
-                triggerCollider.convex = true;
-                triggerCollider.isTrigger = true;
-                childColliders.Add(triggerCollider);
-                MeshCollider nonTriggerCollider = child.gameObject.AddComponent<MeshCollider>();
-                nonTriggerCollider.sharedMesh = triggerCollider.sharedMesh;
-                nonTriggerCollider.convex = true;
-                nonTriggerCollider.isTrigger = false;
-                childColliders.Add(nonTriggerCollider);
+                if (child.name.ToLower() == "rotor" || child.name.ToLower() == "body") {
+                    triggerCollider.convex = true;
+                    triggerCollider.isTrigger = true;
+                    childColliders.Add(triggerCollider);
+                    MeshCollider nonTriggerCollider = child.gameObject.AddComponent<MeshCollider>();
+                    nonTriggerCollider.sharedMesh = triggerCollider.sharedMesh;
+                    nonTriggerCollider.convex = true;
+                    nonTriggerCollider.isTrigger = false;
+                    childColliders.Add(nonTriggerCollider);
+                }
                 HelicopterPartCollisionHandler collisionHandler = child.gameObject.AddComponent<HelicopterPartCollisionHandler>();
                 collisionHandler.helicopterController = this;
                 AssignPartType(collisionHandler, child);
@@ -131,16 +151,21 @@ public class HelicopterController : MonoBehaviour {
     }
 
     public void Explode() {
-        Debug.Log("Boom");
+        GameObject destroyedHeli = Instantiate(destroyedHeliPrefab, transform.position, transform.rotation);
+        CameraFollow.Instance.ChangeTarget(destroyedHeli.transform);
+        ObjectHelper.Explode(destroyedHeli);
+        GameManager.Instance.CallLoseGame();
+        Destroy(gameObject);
     }
 
     public void HandlePartCollision(HelicopterPartCollisionHandler.PartType partType, Collider collision) {
         switch (partType) {
             case HelicopterPartCollisionHandler.PartType.Rotor:
-                HandleRotorCollision();
+                Explode();
                 break;
             case HelicopterPartCollisionHandler.PartType.Body:
-                HandleBodyCollision(collision);
+                if (rb.velocity.magnitude > crashSpeedThreshold) 
+                    Explode();
                 break;
             case HelicopterPartCollisionHandler.PartType.SkiL:
             case HelicopterPartCollisionHandler.PartType.SkiR:
@@ -149,50 +174,35 @@ public class HelicopterController : MonoBehaviour {
         }
     }
 
-    void HandleRotorCollision() {
-        Debug.Log("Rotor crash!");
-        HandleCrash();
-    }
-
-    void HandleBodyCollision(Collider collision) {
-        float impactSpeed = rb.velocity.magnitude;
-
-        if (impactSpeed > crashSpeedThreshold) {
-            Debug.Log("Body Crash");
-            HandleCrash();
-        }
-        else {
-            Debug.Log("Body Minor damage.");
-            HandleMinorDamage();
-        }
-    }
+    public bool skiRLanded = false;
+    public bool skiLLanded = false;
 
     void HandleSkiCollision(HelicopterPartCollisionHandler.PartType skiPart, Collider collision) {
-        if (Physics.Raycast(collision.transform.position, -Vector3.up, out RaycastHit hit))
-        {
-            Vector3 collisionNormal = hit.normal;
-            if (Vector3.Dot(collisionNormal, Vector3.up) > 0.7f)
-            {
-                Debug.Log("Landing detected.");
-                isGrounded = true;
+        if (!collision.CompareTag("Helipad")) 
+            return;
+        if (skiPart == HelicopterPartCollisionHandler.PartType.SkiR) 
+            skiRLanded = true;
+        else if (skiPart == HelicopterPartCollisionHandler.PartType.SkiL) 
+            skiLLanded = true;
+        if (skiRLanded && skiLLanded) {
+            bool wasCompleted = false;
+            int objectIndex = -1;
+            var gObject = GameManager.Instance.objectivesCompleted;
+            for (int i = 0; i < gObject.Length; i++) {
+                if (collision.gameObject == gObject[i].Item1) {
+                    objectIndex = i;
+                    if (gObject[i].Item2)
+                        wasCompleted = true;
+                }
             }
-            else if (rb.velocity.magnitude > skiDamageSpeedThreshold)
-            {
-                Debug.Log($"{skiPart} collision");
-                HandleSkiDamage(skiPart);
+            if (!wasCompleted) {
+                UIUpdater.Instance.UpdateCurrentObjectiveScore();
+                GameManager.Instance.objectivesCompleted[objectIndex] = Tuple.Create(gObject[objectIndex].Item1, true);
+                GameManager.Instance.objectiveAccuries[objectIndex] = ScoreChecker.GetHeliPadAccuracy(transform.position.x - collision.transform.position.x, transform.position.z - collision.transform.position.z);
+                GameManager.Instance.accuracy = ScoreChecker.GetOverallAccuracy(GameManager.Instance.objectiveAccuries);
+                
             }
+            isGrounded = true;
         }
-    }
-
-    void HandleCrash() {
-        Debug.Log("Crash!");
-    }
-
-    void HandleMinorDamage() {
-        Debug.Log("Minor damage!");
-    }
-
-    void HandleSkiDamage(HelicopterPartCollisionHandler.PartType skiPart) {
-        Debug.Log($"{skiPart} has been damaged or detached!");
     }
 }

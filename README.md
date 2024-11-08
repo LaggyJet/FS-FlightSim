@@ -53,5 +53,6 @@ A fun and engaging flight simulator focused on the MH-6 Little Bird helicopter, 
 
 ## Collaborators
 -Joshua Furber
+
 -Jacob Irvin
 

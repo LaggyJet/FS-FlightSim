@@ -51,6 +51,6 @@ A fun and engaging flight simulator focused on the MH-6 Little Bird helicopter, 
 - Adjust settings in the *Options* menu for graphics, controls, and flight sensitivity.
 - For a physical representation of the helicopter's movement and orientation, connect a pre-coded ESP32 to the Stewart platform or utilize other ESP32 setups to experiment with the data being sent from the game.
 
-##Collaborators
+## Collaborators
 -Joshua Furber
 -Jacob Irvin

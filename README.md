@@ -46,6 +46,10 @@ A fun and engaging flight simulator focused on the MH-6 Little Bird helicopter, 
   - Ensure Bluetooth/Serial communication is enabled.
 
 ## Usage
+
+##Collaborators
+-Joshua Furber
+-Jacob Irvin
 - Select the desired game mode from the main menu.
 - Use the supported input devices to control the helicopter.
 - Adjust settings in the *Options* menu for graphics, controls, and flight sensitivity.

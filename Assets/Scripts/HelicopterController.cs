@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,6 +13,7 @@ public class HelicopterController : MonoBehaviour {
     Rigidbody rb;
     float xRotation, zRotation, yRotation, spinUpTimer, currentRotorSpeed;
     bool isSpinningUp, isSpinningDown, isGrounded;
+    bool isMovingUp = false, isMovingDown = false, isMovingLeft = false, isMovingRight = false, isMovingForward = false, isMovingBackward = false, isLeaningLeft = false, isLeaningRight = false;
 
     void Start() {
         rb = GetComponent<Rigidbody>();
@@ -24,7 +24,7 @@ public class HelicopterController : MonoBehaviour {
     }
 
     void Update() {
-        if (Joystick.current.wasUpdatedThisFrame) {
+        if (Joystick.current != null && Joystick.current.wasUpdatedThisFrame) {
             isMovingUp = Input.GetAxis("FwdBck") > 0.5f;
             isMovingDown = Input.GetAxis("FwdBck") < -0.5f;
             isMovingLeft = Input.GetAxis("Yaw") < -0.2f;
@@ -34,11 +34,11 @@ public class HelicopterController : MonoBehaviour {
             isLeaningLeft = Input.GetAxis("Horizontal") < -0.2f;
             isLeaningRight = Input.GetAxis("Horizontal") > 0.2f;
             if (Input.GetKeyDown(KeyCode.JoystickButton4))
-                OnTurnOn(null);
+                OnTurnOn();
             if (Input.GetKeyDown(KeyCode.JoystickButton5))
-                OnShutdown(null);
+                OnShutdown();
             if (Input.GetKeyDown(KeyCode.JoystickButton10))
-                OnPauseResume(null);
+                OnPauseResume();
         }
 
         if (isSpinningUp) {
@@ -63,9 +63,6 @@ public class HelicopterController : MonoBehaviour {
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, zRotation);
     }
 
-    bool isMovingUp = false, isMovingDown = false, isMovingLeft = false, isMovingRight = false;
-    bool isMovingForward = false, isMovingBackward = false, isLeaningLeft = false, isLeaningRight = false;
-
     void OnUp(InputValue value) { isMovingUp = value.isPressed; isGrounded = false; }
 
     void OnDown(InputValue value) { isMovingDown = value.isPressed; }
@@ -82,23 +79,24 @@ public class HelicopterController : MonoBehaviour {
 
     void OnLeanRight(InputValue value) { isLeaningRight = value.isPressed; }
 
-    void OnTurnOn(InputValue value) {
+    void OnTurnOn() {
         GameManager.Instance.startedGame = true;
-        if (!isSpinningDown && currentRotorSpeed < maxRotorSpeed) {
+        if (!isSpinningDown && currentRotorSpeed < maxRotorSpeed && !isSpinningUp) {
             isSpinningUp = true;
             spinUpTimer = spinUpTime;
             currentRotorSpeed = 0f;
         }
     }
 
-    void OnShutdown(InputValue value) { if (currentRotorSpeed > 0f && !isSpinningUp && isGrounded) { 
+    void OnShutdown() { 
+        if (currentRotorSpeed > 0f && !isSpinningUp && isGrounded) { 
             isSpinningDown = true;
             if (GameManager.Instance.finishedObjectives)
                 GameManager.Instance.CallWinGame();
         } 
     }
 
-    void OnPauseResume(InputValue value) { (GameManager.Instance.isPaused ? (Action)GameManager.Instance.ResumeGame : GameManager.Instance.PauseGame)(); }
+    void OnPauseResume() { (GameManager.Instance.isPaused ? (Action)GameManager.Instance.ResumeGame : GameManager.Instance.PauseGame)(); }
 
     void FixedUpdate() {
         if (currentRotorSpeed >= maxRotorSpeed) {

@@ -21,6 +21,8 @@ public class HelicopterController : MonoBehaviour {
         AssignCollisionHandlers();
         rb.isKinematic = false;
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+
+        PlatformController.singleton.Init("COM4", 115200);
     }
 
     void Update() {
@@ -61,6 +63,10 @@ public class HelicopterController : MonoBehaviour {
             tailRotor.Rotate(Vector3.right, currentRotorSpeed * Time.deltaTime);
         }
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, zRotation);
+
+        PlatformController.singleton.Pitch = xRotation * 0.4f;
+        PlatformController.singleton.Yaw = Mathf.Lerp(PlatformController.singleton.Yaw, isMovingLeft ? -12 : isMovingRight ? 12 : 0, 0.1f);
+        PlatformController.singleton.Roll = -zRotation * 0.3f;
     }
 
     void OnUp(InputValue value) { isMovingUp = value.isPressed; isGrounded = false; }

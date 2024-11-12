@@ -51,65 +51,48 @@ public class PlatformController : MonoBehaviour
         byteValues = new byte[] { 128, 128, 128, 128, 128, 128 };
         floatValues = new float[] { 0, 0, 0, 0, 0, 0 };
 
+        SerialThreadIO.instance.Init(comPort, baudRate);
+
         // Create SerialPort instance(this does not open the connection)
-        if (serialPort == null)
-        {
-            serialPort = new SerialPort(@"\\.\" + comPort); // special port formating to force Unity to recognize ports beyond COM9            
-            serialPort.BaudRate = baudRate;
-            serialPort.Parity = Parity.None;
-            serialPort.DataBits = 8;
-            serialPort.ReadTimeout = 20; // miliseconds
-        }
+        //if (serialPort == null)
+        //{
+        //    serialPort = new SerialPort(@"\\.\" + comPort); // special port formating to force Unity to recognize ports beyond COM9            
+        //    serialPort.BaudRate = baudRate;
+        //    serialPort.Parity = Parity.None;
+        //    serialPort.DataBits = 8;
+        //    serialPort.ReadTimeout = 20; // miliseconds
+        //}
 
-        // Attempt to open the SerialPort and log any errors
-        try
-        {
-            serialPort.Open();
-            Debug.Log("Initialize Serial Port: " + comPort);
-        }
-        catch (System.IO.IOException ex)
-        {
-            Debug.LogError("Error opening " + comPort + "\n" + ex.Message);
-            return false;
-        }
+        //// Attempt to open the SerialPort and log any errors
+        //try
+        //{
+        //    serialPort.Open();
+        //    Debug.Log("Initialize Serial Port: " + comPort);
+        //}
+        //catch (System.IO.IOException ex)
+        //{
+        //    Debug.LogError("Error opening " + comPort + "\n" + ex.Message);
+        //    return false;
+        //}
 
-        // Reset sliders, if in use
-        if (useSliders) { InitializeSliders(); }
+        //// Reset sliders, if in use
+        //if (useSliders) { InitializeSliders(); }
 
-        // Reset platform values
-        HomePlatform();
+        //// Reset platform values
+        //HomePlatform();
 
         return true;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W)) {
-            for (int i = 0; i < byteValues.Length; i++)
-            {
-                if (i % 2 == 0)
-                    byteValues[i] = 0;
-                else
-                    byteValues[i] = 255;
-            }
-                
-        }
-        else if (Input.GetKeyDown(KeyCode.S)) {
-            for (int i = 0; i < byteValues.Length; i++)
-            {
-                if (i % 2 == 0)
-                    byteValues[i] = 255;
-                else
-                    byteValues[i] = 0;
-            }
-        }
-
         // if true this will override user set values with slider values
         if (useSliders == true) { UpdateValuesFromSliders(); }
 
         if (Time.time > nextSendTimestamp)
         {
-            SendSerial(); // Send the data out on a fixed timeStamp (0.02 ms = 50 FPS)
+            //SendSerial(); // Send the data out on a fixed timeStamp (0.02 ms = 50 FPS)
+            SerialThreadIO.instance.EnqueueFloats(floatValues);
             nextSendTimestamp = Time.time + nextSendDelay; // update time stamp
         }
 

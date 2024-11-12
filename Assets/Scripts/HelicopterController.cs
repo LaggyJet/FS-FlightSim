@@ -21,8 +21,7 @@ public class HelicopterController : MonoBehaviour {
         AssignCollisionHandlers();
         rb.isKinematic = false;
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-
-        PlatformController.singleton.Init("COM4", 115200);
+        PlatformController.singleton.Init("COM11", 115200);
     }
 
     void Update() {

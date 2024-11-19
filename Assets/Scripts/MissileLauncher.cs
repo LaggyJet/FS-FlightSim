@@ -35,19 +35,17 @@ public class MissileLauncher : MonoBehaviour {
     IEnumerator WarningSequence() {
         warningTextContainter.SetActive(true);
         countdown = warningDuration;
-        warningText.text = "Entering restricted airspace, lower altitude or be shot down.";
-        warningText.color = Color.red;
+        warningText.enabled = true;
         countdownText.gameObject.SetActive(true);
         countdownText.enabled = true;
         while (countdown > 0) {
             countdownText.text = countdown.ToString("F0");
             yield return new WaitForSeconds(1f);
-            warningText.enabled = !warningText.enabled;
+            countdownText.enabled = !countdownText.enabled;
             countdown--;
         }
         countdownText.gameObject.SetActive(false);
-        warningText.enabled = true;
-        warningText.text = "Incoming Missile, lower altitiude.";
+        warningText.text = "Incoming missile, lower altitiude.";
         countdownText.enabled = false;
         ActivateMissile(); 
     }

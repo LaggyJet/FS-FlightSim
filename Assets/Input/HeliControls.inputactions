@@ -6,15 +6,6 @@
             "id": "bc6c01e8-41a6-4244-9b57-2e1488debfbc",
             "actions": [
                 {
-                    "name": "Look",
-                    "type": "Value",
-                    "id": "5855db16-b621-42c5-9751-fe308eadb14d",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Up",
                     "type": "Value",
                     "id": "28f3b015-9958-4805-b539-da0435c59811",
@@ -448,7 +439,7 @@
                 {
                     "name": "",
                     "id": "c035118c-41e2-44bf-8c07-b3799812a8fc",
-                    "path": "<Button:/Thrustmaster T.Flight Hotas X/button11>",
+                    "path": "<HID::Thrustmaster T.Flight Hotas X>/button5",
                     "interactions": "",
                     "processors": "",
                     "groups": ";FlightStick",
@@ -481,44 +472,11 @@
                 {
                     "name": "",
                     "id": "396da95b-1a1c-45a6-a1ff-51a48d83ca98",
-                    "path": "<HID::Thrustmaster T.Flight Hotas X>/button12",
+                    "path": "<HID::Thrustmaster T.Flight Hotas X>/button6",
                     "interactions": "",
                     "processors": "",
                     "groups": ";FlightStick",
                     "action": "Shutdown",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "276b75e8-80c8-44d3-a003-dcc224885868",
-                    "path": "<Pointer>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "61a3b3fe-e973-4c58-9ab3-1fef4e4377b2",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "40d4a2bb-d011-4890-8733-ce04fbcd622f",
-                    "path": "<HID::Thrustmaster T.Flight Hotas X>/hat",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";FlightStick",
-                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -547,7 +505,7 @@
                 {
                     "name": "",
                     "id": "6a4ed4a8-9467-46e8-9298-9a1d7e3d8333",
-                    "path": "",
+                    "path": "<HID::Thrustmaster T.Flight Hotas X>/button11",
                     "interactions": "",
                     "processors": "",
                     "groups": ";FlightStick",

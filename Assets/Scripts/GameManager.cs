@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour {
     public static GameManager Instance {  get; private set; }
     public GameObject[] modes;
     public GameObject[] uiSettings; 
-    [SerializeField] GameObject pauseMenu, background, winMenu, loseMenu, objectivesMenu;
+    [SerializeField] GameObject pauseMenu, background, winMenu, loseMenu, objectivesMenu, pauseButton, winButton, loseButton;
     [SerializeField] TMP_Text loseCurTime, winTimeSpent, winAccAvg, winTimeAvg, winTotalAvg;
     public bool isPaused = false;
     public Tuple<GameObject, bool>[] objectivesCompleted;
@@ -22,7 +23,8 @@ public class GameManager : MonoBehaviour {
             Destroy(gameObject);
         else
             Instance = this;
-        EnableGameMode(Settings.GameMode.None); 
+        EnableGameMode(Settings.GameMode.None);
+        EventSystem.current.SetSelectedGameObject(pauseButton);
     }
 
     private void Update() {
@@ -54,6 +56,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void ResumeGame() {
+        MenuButtons.Instance.settingsMenu.SetActive(false);
         isPaused = false;
         background.SetActive(false);
         pauseMenu.SetActive(isPaused);
@@ -65,6 +68,7 @@ public class GameManager : MonoBehaviour {
     public void CallWinGame() { StartCoroutine(WinGame()); }
 
     IEnumerator WinGame() {
+        EventSystem.current.SetSelectedGameObject(winButton);
         startedGame = false;
         yield return new WaitForSeconds(3f);
         winTimeSpent.text = TimeSpan.FromSeconds(overallTime).ToString(@"hh\:mm\:ss\:fff");
@@ -83,6 +87,7 @@ public class GameManager : MonoBehaviour {
     public void CallLoseGame() { StartCoroutine(LoseGame()); }
 
     IEnumerator LoseGame() {
+        EventSystem.current.SetSelectedGameObject(loseButton);
         startedGame = false;
         yield return new WaitForSeconds(1f);
         loseCurTime.text = TimeSpan.FromSeconds(overallTime).ToString(@"hh\:mm\:ss\:fff");

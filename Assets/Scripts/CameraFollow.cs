@@ -41,7 +41,7 @@ public class CameraFollow : MonoBehaviour {
     }
 
     void LateUpdate() {
-        if (target != null) {
+        if (target != null && !GameManager.Instance.isPaused) {
             yaw += lookPos.x * mouseSensitivity * Time.deltaTime;
             pitch += lookPos.y * mouseSensitivity * Time.deltaTime;
             pitch = Mathf.Clamp(pitch, -30f, 59.99f);

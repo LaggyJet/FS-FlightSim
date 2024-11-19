@@ -173,7 +173,7 @@ public class HelicopterController : MonoBehaviour {
                 Explode();
                 break;
             case HelicopterPartCollisionHandler.PartType.Body:
-                if (rb.velocity.magnitude > crashSpeedThreshold) 
+                if (rb.linearVelocity.magnitude > crashSpeedThreshold) 
                     Explode();
                 break;
             case HelicopterPartCollisionHandler.PartType.SkiL:

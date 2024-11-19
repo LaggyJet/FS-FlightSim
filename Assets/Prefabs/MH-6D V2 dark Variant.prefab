@@ -17257,6 +17257,9 @@ MonoBehaviour:
   mainRotor: {fileID: 3857887564416715586}
   tailRotor: {fileID: 1581017540407493138}
   destroyedHeliPrefab: {fileID: 1027114972786651600, guid: 208a4e6e40652f941baa5e4571912563, type: 3}
+  helipadMask:
+    serializedVersion: 2
+    m_Bits: 64
   skiRLanded: 0
   skiLLanded: 0
 --- !u!54 &1903605499565807726

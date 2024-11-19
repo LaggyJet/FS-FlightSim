@@ -19,6 +19,7 @@ public class Settings : MonoBehaviour {
     }
 
     void Start() {
+        PlatformController.singleton.Init("COM11", 115200);
         resDropDown.ClearOptions();
         resDropDown.AddOptions(Screen.resolutions.Select(res => $"{res.width} x {res.height}").ToList());
         resDropDown.value = Screen.resolutions.Select((res, index) => new {res, index}).FirstOrDefault(pair => pair.res.width == Screen.currentResolution.width && pair.res.height == Screen.currentResolution.height)?.index ?? 0;

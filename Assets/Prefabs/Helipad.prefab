@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6604489995293202574}
   - component: {fileID: 2422559324007816803}
   - component: {fileID: 6335463028933407381}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Helipad
   m_TagString: Helipad
   m_Icon: {fileID: 0}

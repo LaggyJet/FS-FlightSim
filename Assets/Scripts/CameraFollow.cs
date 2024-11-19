@@ -6,9 +6,8 @@ public class CameraFollow : MonoBehaviour {
     [SerializeField] Transform target;
     [SerializeField] float mouseSensitivity = 50f;
     Vector2 lookPos;
-    float pitch = 0f;
-    float yaw = 0f;
     Vector3 initialOffset;
+    float pitch = 0f, yaw = 0f;
 
     void Awake() {
         if (Instance != null && Instance != this)

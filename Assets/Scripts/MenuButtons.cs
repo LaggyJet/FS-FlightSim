@@ -51,6 +51,9 @@ public class MenuButtons : MonoBehaviour {
             case Settings.GameMode.TimeAttack:
                 TimeAttackButton();
                 break;
+            case Settings.GameMode.FreeFlight:
+                FreeFlightButton();
+                break;
             case Settings.GameMode.ObstacleCourse:
                 ObstacleCourseButton();
                 break;

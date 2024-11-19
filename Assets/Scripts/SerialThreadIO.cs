@@ -59,7 +59,6 @@ public class SerialThreadIO : MonoBehaviour
     {
         if (!isInitialized)
         {
-            print("Initialize: " + this.name);
             comPort = com;
             baudRate = baud;
 
@@ -120,7 +119,6 @@ public class SerialThreadIO : MonoBehaviour
     {
         if (serialPort != null && serialPort.IsOpen)
         {
-            print("Close serialPort");
             serialPort.Close();
         }
 
@@ -185,7 +183,6 @@ public class SerialThreadIO : MonoBehaviour
 
     public void OutputThreadLoop()
     {
-        print("OutputThread Start");
         while (outputThreadIsLooping)
         {
             if (serialPort != null && serialPort.IsOpen)
@@ -218,7 +215,6 @@ public class SerialThreadIO : MonoBehaviour
     // Thread Loop
     public void InputThreadLoop()
     {
-        print("Thread Start");
         string stringBuffer = "";
         bool endOfMsg = false;
 

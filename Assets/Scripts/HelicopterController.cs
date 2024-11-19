@@ -10,6 +10,7 @@ public class HelicopterController : MonoBehaviour {
     [SerializeField] float crashSpeedThreshold = 1f;
     [SerializeField] Transform mainRotor, tailRotor;
     [SerializeField] GameObject destroyedHeliPrefab;
+    [SerializeField] LayerMask helipadMask;
     Rigidbody rb;
     float xRotation, zRotation, yRotation, spinUpTimer, currentRotorSpeed;
     bool isSpinningUp, isSpinningDown, isGrounded;
@@ -21,7 +22,6 @@ public class HelicopterController : MonoBehaviour {
         AssignCollisionHandlers();
         rb.isKinematic = false;
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-        PlatformController.singleton.Init("COM11", 115200);
     }
 
     void Update() {
@@ -62,9 +62,12 @@ public class HelicopterController : MonoBehaviour {
             tailRotor.Rotate(Vector3.right, currentRotorSpeed * Time.deltaTime);
         }
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, zRotation);
-
+        if (Physics.Raycast(transform.position, -Vector3.up, out RaycastHit hit, 2, helipadMask))
+            PlatformController.singleton.Heave = Mathf.Lerp(PlatformController.singleton.Heave, ScoreChecker.Map((transform.position - hit.point).magnitude, 0.18f, 2.0f, -8f, 16f), 0.03f);
+        else
+            PlatformController.singleton.Heave = 0f;
         PlatformController.singleton.Pitch = xRotation * 0.4f;
-        PlatformController.singleton.Yaw = Mathf.Lerp(PlatformController.singleton.Yaw, isMovingLeft ? -12 : isMovingRight ? 12 : 0, 0.1f);
+        PlatformController.singleton.Yaw = Mathf.Lerp(PlatformController.singleton.Yaw, isMovingLeft ? -12 : isMovingRight ? 12 : 0, 0.05f);
         PlatformController.singleton.Roll = -zRotation * 0.3f;
     }
 
@@ -113,8 +116,11 @@ public class HelicopterController : MonoBehaviour {
             yRotation += (isMovingLeft ? -rotationSpeed : isMovingRight ? rotationSpeed : 0f) * Time.fixedDeltaTime;
             zRotation += (isLeaningLeft ? rotationSpeed : isLeaningRight ? -rotationSpeed : -zRotation * rollSpeed) * Time.fixedDeltaTime;
             zRotation = Mathf.Clamp(zRotation, -maxZRotation, maxZRotation);
-            if (isLeaningLeft || isLeaningRight)
-                rb.AddForce((isLeaningLeft ? -1 : 1) * forwardSpeed * transform.right / 2);
+            if (isLeaningLeft || isLeaningRight) {
+                fwd = transform.right;
+                fwd.y = 0;
+                rb.AddForce((isLeaningLeft ? -1 : 1) * forwardSpeed * fwd / 1.5f);
+            }
         }
     }
 

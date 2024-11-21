@@ -26,10 +26,12 @@ public class AudioController : MonoBehaviour {
         backgroundAudioSource.Stop();
         switch (type) {
             case BackgroundTypes.Background:
-                backgroundAudioSource.clip = backgroundAudio;
+                if (backgroundAudioSource.clip != backgroundAudio)            
+                    backgroundAudioSource.clip = backgroundAudio;
                 break;
             case BackgroundTypes.Level:
-                backgroundAudioSource.clip = levelAudio;
+                if (backgroundAudioSource.clip != levelAudio)
+                    backgroundAudioSource.clip = levelAudio;
                 break;
         }
         backgroundAudioSource.loop = true;
@@ -79,7 +81,7 @@ public class AudioController : MonoBehaviour {
                 heliAudioSource.PlayOneShot(heliCrash);
                 break;
             case LevelTypes.Heli:
-                heliAudioSource.volume = .5f;
+                heliAudioSource.volume = .75f;
                 heliAudioSource.clip = heliBlades;
                 heliAudioSource.loop = true;
                 heliAudioSource.Play();

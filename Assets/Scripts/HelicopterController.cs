@@ -17,6 +17,7 @@ public class HelicopterController : MonoBehaviour {
     bool isMovingUp = false, isMovingDown = false, isMovingLeft = false, isMovingRight = false, isMovingForward = false, isMovingBackward = false, isLeaningLeft = false, isLeaningRight = false;
 
     void Start() {
+        AudioController.Instance.SetHeliAudioSource(GetComponent<AudioSource>());
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         AssignCollisionHandlers();
@@ -89,6 +90,7 @@ public class HelicopterController : MonoBehaviour {
 
     void OnTurnOn() {
         GameManager.Instance.startedGame = true;
+        AudioController.Instance.PlayAudio(AudioController.LevelTypes.Heli);
         if (!isSpinningDown && currentRotorSpeed < maxRotorSpeed && !isSpinningUp) {
             isSpinningUp = true;
             spinUpTimer = spinUpTime;
@@ -160,6 +162,7 @@ public class HelicopterController : MonoBehaviour {
     }
 
     public void Explode() {
+        AudioController.Instance.PlayAudio(AudioController.LevelTypes.Crash);
         GameObject destroyedHeli = Instantiate(destroyedHeliPrefab, transform.position, transform.rotation);
         CameraFollow.Instance.ChangeTarget(destroyedHeli.transform);
         ObjectHelper.Explode(destroyedHeli);

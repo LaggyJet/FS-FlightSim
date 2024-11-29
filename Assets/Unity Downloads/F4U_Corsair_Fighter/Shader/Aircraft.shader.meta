@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: daefb223d5640a64db63bba469febaf2
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 174403
+  packageName: F4U Corsair Fighter - Low Poly
+  packageVersion: 1.0
+  assetPath: Assets/F4U_Corsair_Fighter/Shader/Aircraft.shader
+  uploadId: 378232

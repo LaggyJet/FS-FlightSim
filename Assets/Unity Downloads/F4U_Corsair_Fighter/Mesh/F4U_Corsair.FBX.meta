@@ -1,0 +1,261 @@
+fileFormatVersion: 2
+guid: d7b9ec251beb0ae44aa2039b425eddd5
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: Chassis
+    100002: Elevator
+    100004: //RootNode
+    100006: Front_Strut_Covers
+    100008: Left_Aileron_Inside
+    100010: Left_Aileron_Outside
+    100012: Left_Flap
+    100014: Left_Wheel
+    100016: Prop
+    100018: Rear_Wheel_Array
+    100020: Right_Aileron_Inside
+    100022: Right_Aileron_Outside
+    100024: Right_Flap
+    100026: Right_Wheel
+    100028: Rudder
+    100030: Wheel_Cover_Left
+    100032: Wheel_Cover_Left 1
+    100034: Wheel_Cover_Right
+    100036: Wheel_Cover_Right 1
+    100038: Left_Aileron_Inner
+    100040: Left_Aileron_Outer
+    100042: Right_Aileron_Inner
+    100044: Right_Aileron_Outer
+    100046: Fuselage
+    100048: Left_Inner_Flap
+    100050: Left_Mid_Flap
+    100052: Right_Inner_Flap
+    100054: Right_Mid_Flap
+    100056: Left_Wheel_Cover_Inner
+    100058: Left_Wheel_Cover_Outer
+    100060: Right_Wheel_Cover_Inner
+    100062: Right_Wheel_Cover_Outer
+    400000: Chassis
+    400002: Elevator
+    400004: //RootNode
+    400006: Front_Strut_Covers
+    400008: Left_Aileron_Inside
+    400010: Left_Aileron_Outside
+    400012: Left_Flap
+    400014: Left_Wheel
+    400016: Prop
+    400018: Rear_Wheel_Array
+    400020: Right_Aileron_Inside
+    400022: Right_Aileron_Outside
+    400024: Right_Flap
+    400026: Right_Wheel
+    400028: Rudder
+    400030: Wheel_Cover_Left
+    400032: Wheel_Cover_Left 1
+    400034: Wheel_Cover_Right
+    400036: Wheel_Cover_Right 1
+    400038: Left_Aileron_Inner
+    400040: Left_Aileron_Outer
+    400042: Right_Aileron_Inner
+    400044: Right_Aileron_Outer
+    400046: Fuselage
+    400048: Left_Inner_Flap
+    400050: Left_Mid_Flap
+    400052: Right_Inner_Flap
+    400054: Right_Mid_Flap
+    400056: Left_Wheel_Cover_Inner
+    400058: Left_Wheel_Cover_Outer
+    400060: Right_Wheel_Cover_Inner
+    400062: Right_Wheel_Cover_Outer
+    2100000: F4U_Corsair
+    2300000: Chassis
+    2300002: Elevator
+    2300004: Front_Strut_Covers
+    2300006: Left_Aileron_Inside
+    2300008: Left_Aileron_Outside
+    2300010: Left_Flap
+    2300012: Left_Wheel
+    2300014: Prop
+    2300016: Rear_Wheel_Array
+    2300018: Right_Aileron_Inside
+    2300020: Right_Aileron_Outside
+    2300022: Right_Flap
+    2300024: Right_Wheel
+    2300026: Rudder
+    2300028: Wheel_Cover_Left
+    2300030: Wheel_Cover_Left 1
+    2300032: Wheel_Cover_Right
+    2300034: Wheel_Cover_Right 1
+    2300036: Left_Aileron_Inner
+    2300038: Left_Aileron_Outer
+    2300040: Right_Aileron_Inner
+    2300042: Right_Aileron_Outer
+    2300044: Fuselage
+    2300046: Left_Inner_Flap
+    2300048: Left_Mid_Flap
+    2300050: Right_Inner_Flap
+    2300052: Right_Mid_Flap
+    2300054: Left_Wheel_Cover_Inner
+    2300056: Left_Wheel_Cover_Outer
+    2300058: Right_Wheel_Cover_Inner
+    2300060: Right_Wheel_Cover_Outer
+    3300000: Chassis
+    3300002: Elevator
+    3300004: Front_Strut_Covers
+    3300006: Left_Aileron_Inside
+    3300008: Left_Aileron_Outside
+    3300010: Left_Flap
+    3300012: Left_Wheel
+    3300014: Prop
+    3300016: Rear_Wheel_Array
+    3300018: Right_Aileron_Inside
+    3300020: Right_Aileron_Outside
+    3300022: Right_Flap
+    3300024: Right_Wheel
+    3300026: Rudder
+    3300028: Wheel_Cover_Left
+    3300030: Wheel_Cover_Left 1
+    3300032: Wheel_Cover_Right
+    3300034: Wheel_Cover_Right 1
+    3300036: Left_Aileron_Inner
+    3300038: Left_Aileron_Outer
+    3300040: Right_Aileron_Inner
+    3300042: Right_Aileron_Outer
+    3300044: Fuselage
+    3300046: Left_Inner_Flap
+    3300048: Left_Mid_Flap
+    3300050: Right_Inner_Flap
+    3300052: Right_Mid_Flap
+    3300054: Left_Wheel_Cover_Inner
+    3300056: Left_Wheel_Cover_Outer
+    3300058: Right_Wheel_Cover_Inner
+    3300060: Right_Wheel_Cover_Outer
+    4300000: Chassis
+    4300002: Elevator
+    4300004: Rear_Wheel_Array
+    4300006: Right_Aileron_Outside
+    4300008: Right_Aileron_Inside
+    4300010: Right_Flap
+    4300012: Left_Aileron_Outside
+    4300014: Left_Aileron_Inside
+    4300016: Left_Flap
+    4300018: Prop
+    4300020: Rudder
+    4300022: Wheel_Cover_Left
+    4300024: Wheel_Cover_Right
+    4300026: Wheel_Cover_Right
+    4300028: Wheel_Cover_Left
+    4300030: Front_Strut_Covers
+    4300032: Left_Wheel
+    4300034: Right_Wheel
+    4300036: Right_Aileron_Inner
+    4300038: Right_Aileron_Outer
+    4300040: Left_Aileron_Inner
+    4300042: Left_Aileron_Outer
+    4300044: Right_Inner_Flap
+    4300046: Right_Mid_Flap
+    4300048: Fuselage
+    4300050: Left_Inner_Flap
+    4300052: Left_Mid_Flap
+    4300054: Left_Wheel_Cover_Outer
+    4300056: Left_Wheel_Cover_Inner
+    4300058: Right_Wheel_Cover_Outer
+    4300060: Right_Wheel_Cover_Inner
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: F4U_Corsair
+    second: {fileID: 2100000, guid: 01f36b01c23357b43abe941cc962b051, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 1
+    materialSearch: 2
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 1
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 0
+    importBlendShapes: 0
+    importCameras: 0
+    importLights: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 174403
+  packageName: F4U Corsair Fighter - Low Poly
+  packageVersion: 1.0
+  assetPath: Assets/F4U_Corsair_Fighter/Mesh/F4U_Corsair.FBX
+  uploadId: 378232

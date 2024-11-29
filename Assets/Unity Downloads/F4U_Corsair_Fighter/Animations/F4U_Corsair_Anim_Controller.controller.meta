@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 68a13c9a0bd0f3547b7bdce85253a9a7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 174403
+  packageName: F4U Corsair Fighter - Low Poly
+  packageVersion: 1.0
+  assetPath: Assets/F4U_Corsair_Fighter/Animations/F4U_Corsair_Anim_Controller.controller
+  uploadId: 378232

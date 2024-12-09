@@ -11,7 +11,7 @@ public class ControlSurface : MonoBehaviour, AnimationInterface
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        anim = this.GetComponentInChildren<Animator>();
+        anim = this.GetComponent<Animator>();
     }
 
     void AnimationInterface.SetValue(float val, bool large) { anim.SetFloat(fname, map(val, large)); print(anim.GetFloat(fname)); }

@@ -714,9 +714,49 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3035537834788437890, guid: b432a25b87d74b94797ddf2749f5599b, type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3035537834788437890, guid: b432a25b87d74b94797ddf2749f5599b, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3188546595206017619, guid: b432a25b87d74b94797ddf2749f5599b, type: 3}
       propertyPath: m_Name
       value: F4U_Corsair
+      objectReference: {fileID: 0}
+    - target: {fileID: 4415235481623602008, guid: b432a25b87d74b94797ddf2749f5599b, type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4415235481623602008, guid: b432a25b87d74b94797ddf2749f5599b, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4590247428562835195, guid: b432a25b87d74b94797ddf2749f5599b, type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4590247428562835195, guid: b432a25b87d74b94797ddf2749f5599b, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914941426482292394, guid: b432a25b87d74b94797ddf2749f5599b, type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914941426482292394, guid: b432a25b87d74b94797ddf2749f5599b, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6129441325721557529, guid: b432a25b87d74b94797ddf2749f5599b, type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6129441325721557529, guid: b432a25b87d74b94797ddf2749f5599b, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

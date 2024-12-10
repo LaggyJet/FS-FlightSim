@@ -12,7 +12,7 @@ using UnityEngine.UIElements;
 public class PlaneController : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
-    [SerializeField] GameObject[] animatedParts; //prop, elevator, left aeileron, right aieleron, rudder
+    [SerializeField] GameObject[] animatedParts; //prop, elevator, right aeileron, left aieleron, rudder
     private AnimationInterface[] interfaces;
 
     [Header("Plane variables")]
@@ -53,7 +53,7 @@ public class PlaneController : MonoBehaviour
     {
         pitch = HandleAnimations(1, Input.GetAxis("Pitch"), false);
         roll = HandleAnimations(3, Input.GetAxis("Roll"), false);
-        HandleAnimations(2, -Input.GetAxis("Roll"), false);
+        HandleAnimations(2, Input.GetAxis("Roll"), false);
         yaw = HandleAnimations(4, Input.GetAxis("Yaw"), false);
 
         if(Input.GetKeyDown(KeyCode.BackQuote)) 

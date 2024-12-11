@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -13,7 +14,7 @@ public class PlaneController : MonoBehaviour
 {
     [SerializeField] Rigidbody rb;
     [SerializeField] GameObject[] animatedParts; //prop, elevator, right aeileron, left aieleron, rudder
-    private AnimationInterface[] interfaces;
+    AnimationInterface[] interfaces;
 
     [Header("Plane variables")]
     [Tooltip("How Much the Throttle is Increased or Decreased by Each Input")]
@@ -23,23 +24,27 @@ public class PlaneController : MonoBehaviour
     [Tooltip("How Responsive the Plane is When Maneuvering")]
     [SerializeField] public float responsiveness = 100.0f;
 
-    private float throttle;
-    private float roll;
-    private float pitch;
-    private float yaw;
+    float throttle;
+    float roll;
+    float pitch;
+    float yaw;
     float liftCoefficient = 0.8f;
     float dragCoefficient = 0.04f;
     float area = 26;
 
-    //This is makes our responsiveness of the plane be scaled with its mass
-    private float responseModifier { get { return (rb.mass / 10.0f) * responsiveness; } }
+    GunSystem weapons;
+    bool firing;
 
-    private float idle = 1f;
-    private bool running = false;
+    //This is makes our responsiveness of the plane be scaled with its mass
+    float responseModifier { get { return (rb.mass / 10.0f) * responsiveness; } }
+
+    float idle = 1f;
+    bool running = false;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        weapons = GetComponent<GunSystem>();
         interfaces = new AnimationInterface[animatedParts.Length];
         int temp = 0;
         foreach(var part in animatedParts)
@@ -51,6 +56,14 @@ public class PlaneController : MonoBehaviour
 
     private void HandleInputs()
     {
+        if(Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            firing = true;
+        }
+        if(Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            firing = false;
+        }
         pitch = HandleAnimations(1, Input.GetAxis("Pitch"), false);
         roll = HandleAnimations(3, Input.GetAxis("Roll"), false);
         HandleAnimations(2, Input.GetAxis("Roll"), false);
@@ -74,20 +87,12 @@ public class PlaneController : MonoBehaviour
 
     }
 
-    private float HandleAnimations(int part, float val, bool large)
-    {
-        interfaces[part].SetValue(val, large);
-        return val;
-    }
-
-    private bool HandleAnimations(int part, bool val)
-    {
-        interfaces[part].SetBool(val);
-        return val;
-    }
+    
 
     private void Update()
     {
+        if(firing)
+            weapons.fire();
         HandleInputs();
         Debug.DrawLine(rb.position, rb.position + rb.linearVelocity, Color.yellow);
         //code for finding angle of attack to use for stall and weight
@@ -131,6 +136,18 @@ public class PlaneController : MonoBehaviour
         torque += transform.up* yaw *responsiveness * responsiveness;
 
         return torque;
+    } 
+
+    private float HandleAnimations(int part, float val, bool large)
+    {
+        interfaces[part].SetValue(val, large);
+        return val;
+    }
+
+    private bool HandleAnimations(int part, bool val)
+    {
+        interfaces[part].SetBool(val);
+        return val;
     }
 
 }

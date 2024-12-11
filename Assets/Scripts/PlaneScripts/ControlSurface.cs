@@ -14,7 +14,7 @@ public class ControlSurface : MonoBehaviour, AnimationInterface
      anim = this.GetComponent<Animator>();
     }
 
-    void AnimationInterface.SetValue(float val, bool large) { anim.SetFloat(fname, map(val, large)); print(anim.GetFloat(fname)); }
+    void AnimationInterface.SetValue(float val, bool large) { anim.SetFloat(fname, map(val, large)); }
 
     void AnimationInterface.SetBool(bool val) { anim.SetBool(bname, val); }
 

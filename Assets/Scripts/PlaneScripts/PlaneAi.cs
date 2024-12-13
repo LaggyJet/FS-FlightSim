@@ -100,7 +100,7 @@ public class PlaneAi : MonoBehaviour
             safeDirection += (-point) * 1/distance;
         }
 
-        transform.LookAt(new Vector3(transform.position.x + safeDirection.x * responsiveness, transform.position.y + safeDirection.y * responsiveness, 0));
+        rb.AddTorque(new Vector3(transform.position.x + safeDirection.x * responsiveness, transform.position.y + safeDirection.y * responsiveness, 0));
     }
 
 

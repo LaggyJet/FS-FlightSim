@@ -88,7 +88,6 @@ public class PlaneController : MonoBehaviour
     }
 
     
-
     private void Update()
     {
         if(firing)

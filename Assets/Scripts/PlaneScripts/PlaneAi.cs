@@ -14,6 +14,7 @@ public class PlaneAi : MonoBehaviour
     [SerializeField] float speed = 80f;
     [SerializeField] float responsiveness = 15f;
     [SerializeField] float gravity = 100f;
+    [SerializeField] bool enemyAi;
     Rigidbody rb;
     List<GameObject> boids = new List<GameObject>();
     List<Vector3> avoid = new List<Vector3>();
@@ -67,7 +68,7 @@ public class PlaneAi : MonoBehaviour
         //loops through our list of boids to see if its one we want to follow and if its closer then our closest
         foreach(GameObject plane in boids)
         {
-            if (plane.gameObject.tag == "Foe")
+            if (IsEnemy(plane.gameObject.tag))
             {
                 float temp = Vector3.Distance(this.transform.position, plane.transform.position);
                 //if all  requirements are met we make this the new closest and track the distance as this will be used to adjust the plane following and how fast it follows
@@ -119,13 +120,19 @@ public class PlaneAi : MonoBehaviour
 
     public void Crash()
     {
-        Vector3 temp = rb.transform.InverseTransformPoint(new Vector3(rb.transform.TransformPoint(rb.transform.position).x, 0, rb.transform.TransformPoint(rb.transform.position).z));
-        Vector3 down = temp * gravity;
-        rb.AddForce(down);
-        if (rb.angularVelocity.x <= 0) { rb.AddTorque(new Vector3(-responsiveness, 0, 0)); }
-        else { rb.AddTorque(new Vector3(responsiveness, 0, 0)); }
+        rb.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
+        if (rb.angularVelocity.x <= 0) { rb.AddTorque(new Vector3(1000000 * -responsiveness, 0, 0)); }
+        else { rb.AddTorque(new Vector3( 1000000 * responsiveness, 0, 0)); }
     }
 
+    private bool IsEnemy(string tag)
+    {
+        if (enemyAi && tag == "Corsair")
+            return true;
+        else if (!enemyAi && tag == "Zero")
+            return true;
+        else return false;
+    }
 
     //Rules for BOIDS
     //1.) Avoid Collision With Other Boids

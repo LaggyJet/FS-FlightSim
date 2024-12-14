@@ -8,6 +8,8 @@ TagManager:
   - Missile
   - Heli
   - Helipad
+  - Corsair
+  - Zero
   layers:
   - Default
   - TransparentFX

@@ -652,7 +652,7 @@ GameObject:
   - component: {fileID: 846954709586126706}
   m_Layer: 0
   m_Name: zero
-  m_TagString: Untagged
+  m_TagString: Zero
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -715,8 +715,13 @@ MonoBehaviour:
   mask:
     serializedVersion: 2
     m_Bits: 0
+  hp: 0
+  sightDistance: 100
   speed: 80
   responsiveness: 15
+  gravity: 100
+  enemyAi: 0
+  crashing: 0
 --- !u!54 &846954709586126706
 Rigidbody:
   m_ObjectHideFlags: 0

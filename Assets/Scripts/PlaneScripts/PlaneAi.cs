@@ -2,18 +2,22 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 public class PlaneAi : MonoBehaviour
 {
     [SerializeField] Transform LOS;
     [SerializeField] LayerMask mask;
+    [SerializeField] float hp;
     [SerializeField] float sightDistance = 100f;
     [SerializeField] float speed = 80f;
     [SerializeField] float responsiveness = 15f;
+    [SerializeField] float gravity = 100f;
     Rigidbody rb;
     List<GameObject> boids = new List<GameObject>();
     List<Vector3> avoid = new List<Vector3>();
+    [SerializeField, HideInDebugUI]bool crashing = false;
 
     private void Start()
     {
@@ -22,15 +26,19 @@ public class PlaneAi : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.AddForce((rb.transform.forward * speed), ForceMode.Acceleration);
+        if (!crashing) rb.AddForce((rb.transform.forward * speed), ForceMode.Acceleration);
+        else Crash();
     }
     private void Update()
     {
-        boids.Clear();
-        avoid.Clear();
-        FindObstacle();
-        FollowBoid();
-        AvoidObstacle();
+        if(!crashing)
+        {
+            boids.Clear();
+            avoid.Clear();
+            FindObstacle();
+            FollowBoid();
+            AvoidObstacle();
+        }
     }
 
     private void FindObstacle()
@@ -103,7 +111,20 @@ public class PlaneAi : MonoBehaviour
         rb.AddTorque(new Vector3(transform.position.x + safeDirection.x * responsiveness, transform.position.y + safeDirection.y * responsiveness, 0));
     }
 
+    public void TakeDamage(float damage)
+    {
+        hp -= damage;
+        if (hp <= 0) crashing = true;
+    }
 
+    public void Crash()
+    {
+        Vector3 temp = rb.transform.InverseTransformPoint(new Vector3(rb.transform.TransformPoint(rb.transform.position).x, 0, rb.transform.TransformPoint(rb.transform.position).z));
+        Vector3 down = temp * gravity;
+        rb.AddForce(down);
+        if (rb.angularVelocity.x <= 0) { rb.AddTorque(new Vector3(-responsiveness, 0, 0)); }
+        else { rb.AddTorque(new Vector3(responsiveness, 0, 0)); }
+    }
 
 
     //Rules for BOIDS

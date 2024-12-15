@@ -1,28 +1,45 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 public class PlaneAi : MonoBehaviour
 {
-    [SerializeField] Transform LOS;
-    [SerializeField] LayerMask mask;
+    [Header("Boid Variables")]
+    [SerializeField] bool enemyAi; //determines which 'team' the boid is on
+    [SerializeField] Transform LOS; //our point of view for the plane
+    [SerializeField] LayerMask mask; //what it needs to be able to detect
+    [SerializeField] float sightDistance = 100f; //how far the plane can see in front of it
+    List<GameObject> found = new List<GameObject>();
+    List<GameObject> boids = new List<GameObject>();
+    List<Vector3> avoid = new List<Vector3>();
+    [SerializeField, HideInDebugUI] int rayCount = 100;
+    [SerializeField, HideInDebugUI] float density = 2;
+    [SerializeField, HideInDebugUI] float separation = .68f;
+
+    [Header("Plane Stats")]
     [SerializeField] float hp;
-    [SerializeField] float sightDistance = 100f;
     [SerializeField] float speed = 80f;
     [SerializeField] float responsiveness = 15f;
     [SerializeField] float gravity = 100f;
-    [SerializeField] bool enemyAi;
+    [SerializeField] int accuracy = 10;
+    GunSystem weapons;
     Rigidbody rb;
-    List<GameObject> boids = new List<GameObject>();
-    List<Vector3> avoid = new List<Vector3>();
-    [SerializeField, HideInDebugUI]bool crashing = false;
+    [SerializeField, HideInDebugUI] bool crashing = false;
+
+    //Debug Variables
+    [SerializeField, HideInDebugUI] bool drawLines = false;
+    
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        weapons = GetComponent<GunSystem>();
+        responsiveness = Mathf.Pow(responsiveness, 3);
     }
 
     private void FixedUpdate()
@@ -34,6 +51,7 @@ public class PlaneAi : MonoBehaviour
     {
         if(!crashing)
         {
+            found.Clear();
             boids.Clear();
             avoid.Clear();
             FindObstacle();
@@ -45,34 +63,62 @@ public class PlaneAi : MonoBehaviour
     private void FindObstacle()
     {
         //shoot rays out in a cone for finding boids
-        for(int x = 0; x < 100; x++)
+        for(int z = 0; z < rayCount; z++)
         {
-            
-            if (Physics.Raycast(LOS.position, LOS.forward, out RaycastHit hit, 100, mask))
+            float dist = z / (rayCount - 1f);
+            float angle = 2 * Mathf.PI * separation * z;
+            float x = dist * Mathf.Cos(angle) / density;
+            float y = dist * Mathf.Sin(angle) / density;
+
+            Vector3 plot = new Vector3(LOS.forward.x + x , LOS.forward.y + y + Mathf.Abs(LOS.rotation.x), LOS.forward.z + LOS.rotation.z) * sightDistance;
+
+            //draws our rays being shot and if one hits an object we find its root gameobject and search through our list of gameobjects, if its found we return
+            //but if its not we add it to the list then determine if its an obstacle or a boid and add it to the appropriate list for later use
+            if (drawLines)
             {
-                Debug.DrawLine(LOS.position, hit.point);
-                if (hit.collider.gameObject.GetComponent<PlaneAi>()) boids.Add(hit.collider.gameObject.transform.root.gameObject);
+                UnityEngine.Color color;
+                if (z < accuracy) color = UnityEngine.Color.blue; else color = UnityEngine.Color.yellow;
+                Debug.DrawRay(LOS.position, plot, color);
+            }
+            if (Physics.Raycast(LOS.position, plot, out RaycastHit hit, sightDistance))
+            {
+                //draws a red line for each detected object
+                if (drawLines) Debug.DrawLine(LOS.position, hit.point, UnityEngine.Color.red);
+
+                GameObject temp = hit.transform.root.gameObject;
+                if (found.Find(o => o == temp) == null) { found.Add(temp); }
+                else return;
+                if (hit.collider.gameObject.GetComponent<PlaneAi>())
+                {
+                    boids.Add(hit.collider.gameObject.transform.root.gameObject);
+                    if (IsEnemy(hit.collider.gameObject.transform.root.gameObject.tag) && z < accuracy) weapons.Fire();
+                }
                 else avoid.Add(hit.point);
+
+                
             }
         }
         
     }
 
-    //function for finding any boids we want to follow that are close enough to the plane and starting our movement towards them
+
     private void FollowBoid()
     {
+        //if the list of boids is empty we return out
         if (boids.Count == 0) return;
-        //declares a variable for the closest positioned boid we might want to follow and its distance from our plane
+
+        //temp variables being declared
         Vector3 closest = Vector3.zero;
-        float distance = 5000;
-        //loops through our list of boids to see if its one we want to follow and if its closer then our closest
+        float distance = float.MaxValue;
+        
+        //looping through the boids list and checking if the boid found is an enemy or friendly by passing the objects tag into the function
         foreach(GameObject plane in boids)
         {
             if (IsEnemy(plane.gameObject.tag))
             {
-                float temp = Vector3.Distance(this.transform.position, plane.transform.position);
+                float temp = Vector3.Distance(rb.transform.position, plane.transform.position);
                 //if all  requirements are met we make this the new closest and track the distance as this will be used to adjust the plane following and how fast it follows
-                //we add our old postion to avoid list as we will now want to avoid it
+                //we add our old position to avoid list as we will now want to avoid it
                 if (temp > distance)
                 {
                     distance = temp;
@@ -94,23 +140,33 @@ public class PlaneAi : MonoBehaviour
         //makes our point to follow be reactive to our objects velocity and distance from the point to make movements seem more natural
         Vector3 followDirection = rb.linearVelocity + closest.normalized * (1/distance);
         transform.LookAt(followDirection);
-
-        print(avoid.Count);
     }
 
     private void AvoidObstacle()
     {
+        //if avoid list is empty return out
         if(avoid.Count == 0) return;
-        //similar but 
+        
+        //declares a vector that will be the inverse of the average of obstacles to avoid
         Vector3 safeDirection = Vector3.zero;
+        //loops through points to avoid and adds the inverse divided by their distance to the safeDirection vector
         foreach (Vector3 point in avoid)
         {
-            float distance = Vector3.Distance(this.transform.position, point);
-            safeDirection += (-point) * 1/distance;
+            float distance = Vector3.Distance(rb.transform.position, point);
+            safeDirection += (-point) / Mathf.Sqrt(distance);
         }
+        //averages the vector to account for many points being added then multiplies it by our responsiveness to adjust how fast the plane will turn to avoid the obstacles
+        safeDirection /= avoid.Count;
+        safeDirection *= responsiveness;
 
-        rb.AddTorque(new Vector3(transform.position.x + safeDirection.x * responsiveness, transform.position.y + safeDirection.y * responsiveness, 0));
+        //if the safe direction is further on the z axis we want to only apply pitch otherwise we only apply yaw, this keeps the movement more natural and less erratic
+        float scalex = safeDirection.x / safeDirection.y;
+        float scaley = safeDirection.y / safeDirection.x;
+        rb.AddTorque(new Vector3((rb.transform.position.x + safeDirection.x) * scaley, (rb.transform.position.y + safeDirection.y) * scalex, 0));
+        //else if (safeDirection.x > safeDirection.y) rb.AddTorque(new Vector3(rb.transform.position.x + safeDirection.x, 0, 0));
+        //else rb.AddTorque(new Vector3(0, rb.transform.position.y + safeDirection.y, 0));
     }
+
 
     public void TakeDamage(float damage)
     {
@@ -121,8 +177,8 @@ public class PlaneAi : MonoBehaviour
     public void Crash()
     {
         rb.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
-        if (rb.angularVelocity.x <= 0) { rb.AddTorque(new Vector3(1000000 * -responsiveness, 0, 0)); }
-        else { rb.AddTorque(new Vector3( 1000000 * responsiveness, 0, 0)); }
+        if (rb.angularVelocity.x <= 0) { rb.AddTorque(new Vector3(0, 100 * -responsiveness, 0)); }
+        else { rb.AddTorque(new Vector3( 0, 100 * responsiveness, 0)); }
     }
 
     private bool IsEnemy(string tag)

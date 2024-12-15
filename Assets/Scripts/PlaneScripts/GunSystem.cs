@@ -21,11 +21,11 @@ public class GunSystem : MonoBehaviour
     {
         if(shoot)
         {
-            fire();
+            Fire();
         }
     }
 
-    public void fire()
+    public void Fire()
     {
         if(Time.time > nextfire && hitscan)
         {

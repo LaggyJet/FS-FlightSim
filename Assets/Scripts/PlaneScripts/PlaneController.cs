@@ -31,6 +31,7 @@ public class PlaneController : MonoBehaviour
     float liftCoefficient = 0.8f;
     float dragCoefficient = 0.04f;
     float area = 26;
+    float gravity = 65;
 
     GunSystem weapons;
     bool firing;
@@ -91,7 +92,7 @@ public class PlaneController : MonoBehaviour
     private void Update()
     {
         if(firing)
-            weapons.fire();
+            weapons.Fire();
         HandleInputs();
         Debug.DrawLine(rb.position, rb.position + rb.linearVelocity, Color.yellow);
         //code for finding angle of attack to use for stall and weight
@@ -116,11 +117,12 @@ public class PlaneController : MonoBehaviour
         //air pressure dynamically changing with height to use in the lift and drag formulas
         float pressure = (airDensity * rb.transform.forward.sqrMagnitude) / 2;
 
-        //our thrust, lift, and drag formulas
+        //our thrust, lift, drag, and weight formulas
         Vector3 thrust = rb.transform.forward * (thrustMax * throttle);
         Vector3 lift = rb.transform.up * liftCoefficient * pressure * area;
         Vector3 drag = rb.transform.forward * dragCoefficient * pressure * area;
-        
+        Vector3 weight = Vector3.down * gravity;
+
         force = lift + thrust - drag;
 
         return force;
@@ -130,9 +132,9 @@ public class PlaneController : MonoBehaviour
     {
         Vector3 torque = new Vector3();
 
-        torque += transform.right * pitch * responsiveness * responsiveness;
-        torque += transform.forward * roll * responsiveness * responsiveness;
-        torque += transform.up* yaw *responsiveness * responsiveness;
+        torque += transform.right * pitch * responsiveness;
+        torque += transform.forward * roll * responsiveness;
+        torque += transform.up* yaw * responsiveness;
 
         return torque;
     } 

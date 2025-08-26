@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 25f34d0e0f0e87c458f7c70df849d4b3
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 174403
+  packageName: F4U Corsair Fighter - Low Poly
+  packageVersion: 1.0
+  assetPath: Assets/F4U_Corsair_Fighter/Animations/elevator_down.anim
+  uploadId: 378232

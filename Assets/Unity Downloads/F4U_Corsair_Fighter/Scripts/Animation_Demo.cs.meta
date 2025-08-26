@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 15f17d3cf2028a34ba688f468704a3ae
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 174403
+  packageName: F4U Corsair Fighter - Low Poly
+  packageVersion: 1.0
+  assetPath: Assets/F4U_Corsair_Fighter/Scripts/Animation_Demo.cs
+  uploadId: 378232

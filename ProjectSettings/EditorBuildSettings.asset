@@ -12,8 +12,8 @@ EditorBuildSettings:
     path: Assets/Scenes/PlaneMainScene.unity
     guid: d5ac7173c4f9fce42ab3b50e78ecd7bc
   - enabled: 1
-    path: Assets/Scenes/MainScene/MainScene.unity
-    guid: d45b0f2e1b0bb994baf812e9ae7cea58
+    path: Assets/Scenes/HeliMainScene.unity
+    guid: 18d0243c3c8e1144da59d014319c3d19
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: f545962cc3e03604f9f38243794191cf, type: 2}
   m_UseUCBPForAssetBundles: 0

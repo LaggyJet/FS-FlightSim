@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 
-public abstract class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour {
     //singleton
     [HideInInspector] public static GameManager Instance { get; private set; }
     //game mode enum
@@ -115,20 +115,20 @@ public abstract class GameManager : MonoBehaviour {
 
     public void Continue()
     {
-        UI.Instance.settingsMenu.SetActive(false);
+        UI.Instance.titleMenus[1].SetActive(false);
         isPaused = false;
         Time.timeScale = 1;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    public abstract void ResetVals();
+    public virtual void ResetVals() { }
 
     public void CallWinGame() { StartCoroutine(currentManager?.WinGame()); }
 
-    public abstract IEnumerator WinGame();
+    public virtual IEnumerator WinGame() { yield break; }
 
     public void CallLoseGame() { StartCoroutine(currentManager?.LoseGame()); }
 
-    public abstract IEnumerator LoseGame();
+    public virtual IEnumerator LoseGame() { yield break; }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 public class PlaneGameManager : GameManager {
-    //debug
+    //Debug
     [SerializeField, HideInDebugUI] bool debug;
 
     [Tooltip("DogFight Variables")]
@@ -17,15 +17,10 @@ public class PlaneGameManager : GameManager {
     public float timeNow = 0f;
 
     void Update() {
-        if (debug)
-        {
+        if (debug) {
             for (int i = 0; i < 20; i++)
-            {
                 if (Input.GetKeyDown("joystick button " + i))
-                {
                     UnityEngine.Debug.Log("Button " + i + " was pressed!");
-                }
-            }
         }
         if (runTimer) { timeNow += Time.deltaTime; UI.Instance.SetTimer(timeMax - timeNow); }
         if (Input.GetButtonDown("Cancel") && selectedGameMode != GameMode.None) OnPauseResume();
@@ -44,6 +39,7 @@ public class PlaneGameManager : GameManager {
     }
 
     public override IEnumerator LoseGame() {
+        UI.Instance.PlaneGameOver();
         yield return null;
     }
 

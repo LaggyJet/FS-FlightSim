@@ -2,28 +2,55 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
-using static UnityEngine.PlayerLoop.PreUpdate;
 using TMPro;
-using System.Collections;
 
 public class UI : MonoBehaviour {
-    //singleton code
     static public UI Instance {  get; private set; }
+    
     [Header("UI Variables")]
-    [SerializeField] GameObject gameModes;
+    [SerializeField] GameObject planeLevelTimer;
     [SerializeField] GameObject pauseBackground;
-    [SerializeField] TMP_Text heliScorePlaceholder, timerTime, enemyKills, friendlyKills;
+    [SerializeField] TMP_Text heliScorePlaceholder;
+    [SerializeField] TMP_Text timerTime;
+    [SerializeField] TMP_Text enemyKills;
+    [SerializeField] TMP_Text friendlyKills;
     Transform gameModeUI;
-
-
-
-    [Header("Menus and Buttons Variables")] 
-    [HideInDebugUI] readonly List<GameObject> menus = new();
+    [Space]
+    
+    [Header("Button Variables")] 
     public bool canPause = true;
-    public GameObject mainMenu, settingsMenu, gameModesMenu, loseMenu, pauseMenu, winMenu;
-    [SerializeField] GameObject mainButton, gameModesButton, settingsButton, menuBackground, loseButton, resumeButton;
+    [SerializeField] GameObject playButton;
+    [SerializeField] GameObject firstGameModeButton;
+    [SerializeField] GameObject firstSettingButton;
+    [SerializeField] GameObject menuBackground;
+    [SerializeField] GameObject planeRestartButton;
+    [SerializeField] GameObject resumeButton;
+    [Space]
+
+    [Header("Main Title, Settings, GameModes")]
+    public List<GameObject> titleMenus = new();
+    [Space]
+
+    [Header("Pause")]
+    public List<GameObject> generalMenus = new();
+    [Space]
+
+    [Header("Plane Game Over")]
+    public List<GameObject> planeMenus = new();
     GameObject warning;
+    [Space]
+
+    [Header("Heli Win, Heli Lose")]
+    public List<GameObject> heliMenus = new();
+
+    IEnumerable<GameObject> Menus {
+        get {
+            foreach (var menu in titleMenus) yield return menu;
+            foreach (var menu in generalMenus) yield return menu;
+            foreach (var menu in planeMenus) yield return menu;
+            foreach (var menu in heliMenus) yield return menu;
+        }
+    }
     
 
     void Awake() {
@@ -33,19 +60,6 @@ public class UI : MonoBehaviour {
         else
             Instance = this;
         DontDestroyOnLoad(gameObject);
-        //adds menus to the list
-        if (mainMenu != null)
-            menus.Add(mainMenu);
-        if (settingsMenu != null)
-            menus.Add(settingsMenu);
-        if (gameModesMenu != null)
-            menus.Add(gameModesMenu);
-        if (loseMenu != null)
-            menus.Add(loseMenu);
-        if (winMenu != null)
-            menus.Add(winMenu);
-        if (pauseMenu != null)
-            menus.Add(pauseMenu);
     }
 
     //UI CODE
@@ -54,8 +68,8 @@ public class UI : MonoBehaviour {
     public void EnterGameMode()
     {
         CloseMenus();
-        gameModes.SetActive(true);
-        gameModeUI = gameModes.transform.Find(GameManager.Instance.selectedGameMode.ToString());
+        planeLevelTimer.SetActive(true);
+        gameModeUI = planeLevelTimer.transform.Find(GameManager.Instance.selectedGameMode.ToString());
         gameModeUI.gameObject.SetActive(true);
     }
 
@@ -65,7 +79,7 @@ public class UI : MonoBehaviour {
         CloseMenus();
         gameModeUI.gameObject.SetActive(false);
         gameModeUI = null;
-        gameModes.SetActive(false);
+        planeLevelTimer.SetActive(false);
         GameManager.Instance.selectedGameMode = GameManager.GameMode.None;
     }
 
@@ -78,14 +92,14 @@ public class UI : MonoBehaviour {
 
     //MENUS AND BUTTONS CODE
 
-    public void Lose() { canPause = false; gameModes.SetActive(false); pauseBackground.SetActive(true); EnableMenu(loseMenu); EventSystem.current.SetSelectedGameObject(loseButton); SetScores(); GameManager.Instance.Stop(); }
-    public void Pause() { if (canPause) { pauseBackground.SetActive(true); gameModes.SetActive(false); EnableMenu(pauseMenu); EventSystem.current.SetSelectedGameObject(resumeButton); } }
-    public void Win() { canPause = false; gameModes.SetActive(false); EnableMenu(winMenu); }
-    public void EnableMenu(GameObject menu) { foreach (GameObject menu_ in menus) menu_.SetActive(menu == menu_);  }
-    public void CloseMenus() { foreach (GameObject menu_ in menus) { menu_.gameObject.SetActive(false); } menuBackground.SetActive(false); pauseBackground.SetActive(false);  }
-    public void PlayButton() { EnableMenu(gameModesMenu); EventSystem.current.SetSelectedGameObject(gameModesButton); }
+    public void Lose() { canPause = false; planeLevelTimer.SetActive(false); pauseBackground.SetActive(true); EnableMenu(planeMenus[(int)PlaneMenuIndex.GAME_OVER]); EventSystem.current.SetSelectedGameObject(planeRestartButton); SetScores(); GameManager.Instance.Stop(); }
+    public void Pause() { if (canPause) { pauseBackground.SetActive(true); planeLevelTimer.SetActive(false); EnableMenu(generalMenus[(int)GeneralMenuIndex.PAUSE]); EventSystem.current.SetSelectedGameObject(resumeButton); } }
+    public void Win() { canPause = false; planeLevelTimer.SetActive(false); }
+    public void EnableMenu(GameObject menu) { foreach (GameObject menu_ in Menus) menu_.SetActive(menu == menu_);  }
+    public void CloseMenus() { foreach (GameObject menu_ in Menus) { menu_.SetActive(false); } menuBackground.SetActive(false); pauseBackground.SetActive(false);  }
+    public void PlayButton() { EnableMenu(titleMenus[(int)TitleMenuIndex.GAME_MODES]); EventSystem.current.SetSelectedGameObject(firstGameModeButton); }
   
-    public void SettingsButton() { EnableMenu(settingsMenu); EventSystem.current.SetSelectedGameObject(settingsButton); }
+    public void SettingsButton() { EnableMenu(titleMenus[(int)TitleMenuIndex.SETTINGS]); EventSystem.current.SetSelectedGameObject(firstSettingButton); }
 
     public void ExitButton() {
         #if UNITY_EDITOR
@@ -95,11 +109,11 @@ public class UI : MonoBehaviour {
         #endif
     }
 
-    public void UnPause() { if (canPause) { CloseMenus(); gameModes.SetActive(true); GameManager.Instance.Continue(); } }
+    public void UnPause() { if (canPause) { CloseMenus(); planeLevelTimer.SetActive(true); GameManager.Instance.Continue(); } }
 
     public void ReturnHome() { LoadMainMenu(); }
 
-    public void BackButton() { EnableMenu(mainMenu); EventSystem.current.SetSelectedGameObject(mainButton); }
+    public void BackButton() { EnableMenu(titleMenus[(int)TitleMenuIndex.MAIN_TITLE]); EventSystem.current.SetSelectedGameObject(playButton); }
 
     public void TimeAttackButton() { LoadGame("HeliMainScene", GameManager.GameMode.TimeAttack); CloseMenus(); }
 
@@ -113,8 +127,8 @@ public class UI : MonoBehaviour {
         Time.timeScale = 1;
         canPause = true;
         ExitGameMode();
-        EnableMenu(mainMenu);
-        EventSystem.current.SetSelectedGameObject(mainButton);
+        EnableMenu(titleMenus[(int)TitleMenuIndex.MAIN_TITLE]);
+        EventSystem.current.SetSelectedGameObject(playButton);
         menuBackground.SetActive(true);
         SceneManager.LoadSceneAsync("MainMenu");
         AudioController.Instance.FadeAudio(3f, AudioController.BackgroundTypes.Menu);
@@ -170,15 +184,14 @@ public class UI : MonoBehaviour {
         }
     }
 
-    public void SetTimer(float time)
-    {
+    public void SetTimer(float time) {
         int mins = (int)time / 60;
         int secs = (int)time % 60;
 
-        if (mins <= 0 && secs <= 0) Lose();
-
-        string minString = string.Empty;
-        string secsString = string.Empty;
+        if (mins <= 0 && secs <= 0)
+            StartCoroutine(GameManager.Instance.currentManager.LoseGame());
+        string minString;
+        string secsString;
 
         if (mins < 10) minString = "0" + mins.ToString();
         else minString = mins.ToString();
@@ -188,5 +201,23 @@ public class UI : MonoBehaviour {
         string timeText = minString + ":" + secsString;
 
         timerTime.text = timeText;
+    }
+
+
+
+
+
+
+
+
+
+    public void PlaneGameOver() {
+        canPause = false; 
+        planeLevelTimer.SetActive(false); 
+        pauseBackground.SetActive(true); 
+        EnableMenu(planeMenus[(int)PlaneMenuIndex.GAME_OVER]); 
+        EventSystem.current.SetSelectedGameObject(planeRestartButton); 
+        SetScores(); 
+        GameManager.Instance.Stop();
     }
 }

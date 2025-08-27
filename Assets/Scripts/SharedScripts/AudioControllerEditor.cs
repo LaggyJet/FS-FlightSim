@@ -7,9 +7,8 @@ public class AudioControllerEditor : Editor {
         serializedObject.Update();
         base.OnInspectorGUI();
 
-        //
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Quick Audio Adjust", GUILayout.Width(100));
+        GUILayout.Label("Quick Audio Adjust", GUILayout.Width(150));
         GUILayout.Width(200);
         if (GUILayout.Button("Decrease %25"))
             ((AudioController)target).DecreaseAudio(25);

@@ -42,11 +42,11 @@ public class MenuButtons : MonoBehaviour {
 
     public void BackButton() { EnableMenu(mainMenu); EventSystem.current.SetSelectedGameObject(mainButton); }
 
-    public void TimeAttackButton() { LoadGame(); GameManager.Instance.selectedGameMode = GameManager.GameMode.TimeAttack; }
+    public void TimeAttackButton() { LoadGame(); GameManager.Instance.selectedGameMode = GameMode.TimeAttack; }
 
-    public void FreeFlightButton() { LoadGame(); GameManager.Instance.selectedGameMode = GameManager.GameMode.FreeFlight; }
+    public void FreeFlightButton() { LoadGame(); GameManager.Instance.selectedGameMode = GameMode.FreeFlight; }
 
-    public void ObstacleCourseButton() { LoadGame(); GameManager.Instance.selectedGameMode = GameManager.GameMode.ObstacleCourse; }
+    public void ObstacleCourseButton() { LoadGame(); GameManager.Instance.selectedGameMode = GameMode.ObstacleCourse; }
 
     void LoadMainScene() {
         SceneManager.LoadScene("MainMenu");
@@ -59,16 +59,16 @@ public class MenuButtons : MonoBehaviour {
     }
 
     public void RestartButton() {
-        switch (GameManager.Instance.selectedGameMode) {
-            case GameManager.GameMode.TimeAttack:
-                TimeAttackButton();
-                break;
-            case GameManager.GameMode.FreeFlight:
-                FreeFlightButton();
-                break;
-            case GameManager.GameMode.ObstacleCourse:
-                ObstacleCourseButton();
-                break;
-        }
+        //switch (GameManager.Instance.selectedGameMode) {
+        //    case GameMode.TimeAttack:
+        //        TimeAttackButton();
+        //        break;
+        //    case GameMode.FreeFlight:
+        //        FreeFlightButton();
+        //        break;
+        //    case GameMode.ObstacleCourse:
+        //        ObstacleCourseButton();
+        //        break;
+        //}
     }
 }

@@ -9,12 +9,12 @@ public class UI : MonoBehaviour {
     
     [Header("UI Variables")]
     [SerializeField] GameObject planeLevelTimer;
-    [SerializeField] GameObject pauseBackground;
+    [SerializeField] public GameObject pauseBackground;
     [SerializeField] TMP_Text heliScorePlaceholder;
     [SerializeField] TMP_Text timerTime;
     [SerializeField] TMP_Text enemyKills;
     [SerializeField] TMP_Text friendlyKills;
-    Transform gameModeUI;
+    [HideInInspector] public Transform gameModeUI;
     [Space]
     
     [Header("Button Variables")] 
@@ -25,6 +25,8 @@ public class UI : MonoBehaviour {
     [SerializeField] GameObject menuBackground;
     [SerializeField] GameObject planeRestartButton;
     [SerializeField] GameObject resumeButton;
+    [SerializeField] public GameObject heliWinRestartButton;
+    [SerializeField] public GameObject heliLoseRestartButton;
     [Space]
 
     [Header("Main Title, Settings, GameModes")]
@@ -80,7 +82,7 @@ public class UI : MonoBehaviour {
         gameModeUI.gameObject.SetActive(false);
         gameModeUI = null;
         planeLevelTimer.SetActive(false);
-        GameManager.Instance.selectedGameMode = GameManager.GameMode.None;
+        GameManager.Instance.selectedGameMode = GameMode.None;
     }
 
     public void ShowWarning(bool mode)
@@ -115,13 +117,13 @@ public class UI : MonoBehaviour {
 
     public void BackButton() { EnableMenu(titleMenus[(int)TitleMenuIndex.MAIN_TITLE]); EventSystem.current.SetSelectedGameObject(playButton); }
 
-    public void TimeAttackButton() { LoadGame("HeliMainScene", GameManager.GameMode.TimeAttack); CloseMenus(); }
+    public void TimeAttackButton() { LoadGame("HeliMainScene", GameMode.TimeAttack); CloseMenus(); }
 
-    public void FreeFlightButton() { LoadGame("HeliMainScene", GameManager.GameMode.FreeFlight); CloseMenus(); }
+    public void FreeFlightButton() { LoadGame("HeliMainScene", GameMode.FreeFlight); CloseMenus(); }
 
-    public void ObstacleCourseButton() { LoadGame("HeliMainScene", GameManager.GameMode.ObstacleCourse); CloseMenus(); }
+    public void ObstacleCourseButton() { LoadGame("HeliMainScene", GameMode.ObstacleCourse); CloseMenus(); }
 
-    public void DogfightButton() { LoadGame("PlaneMainScene", GameManager.GameMode.DogFight); CloseMenus(); SetTimer(GameManager.Instance.timeMax); }
+    public void DogfightButton() { LoadGame("PlaneMainScene", GameMode.DogFight); CloseMenus(); SetTimer(GameManager.Instance.timeMax); }
 
     void LoadMainMenu() {
         Time.timeScale = 1;
@@ -134,7 +136,8 @@ public class UI : MonoBehaviour {
         AudioController.Instance.FadeAudio(3f, AudioController.BackgroundTypes.Menu);
     }
 
-    void LoadGame( string scene, GameManager.GameMode mode) {
+    void LoadGame(string scene, GameMode mode) {
+        GameManager.Instance.SetGameManager(mode);
         SceneManager.LoadScene(scene);
         GameManager.Instance.selectedGameMode = mode;
         GameManager.Instance.ResumeGame();
@@ -146,41 +149,46 @@ public class UI : MonoBehaviour {
 
     public void RestartButton() {
         UnPause();
-        canPause = true ;
+        canPause = true;
         if (GameManager.Instance.currentManager is PlaneGameManager planeManager)
             planeManager.ResetVals();
-        switch (GameManager.Instance.selectedGameMode) {
-            case GameManager.GameMode.TimeAttack:
-                TimeAttackButton();
+        switch (GameManager.Instance.selectedGameMode.category) {
+            case GameMode.Category.Heli:
+                switch ((GameMode.HeliMode)GameManager.Instance.selectedGameMode.mode) {
+                    case GameMode.HeliMode.TimeAttack:
+                        TimeAttackButton();
+                        break;
+                    case GameMode.HeliMode.FreeFlight:
+                        FreeFlightButton();
+                        break;
+                    case GameMode.HeliMode.ObstacleCourse:
+                        ObstacleCourseButton();
+                        break;
+                }
                 break;
-            case GameManager.GameMode.FreeFlight:
-                FreeFlightButton();
-                break;
-            case GameManager.GameMode.ObstacleCourse:
-                ObstacleCourseButton();
-                break;
-            case GameManager.GameMode.DogFight:
-                DogfightButton();
+
+            case GameMode.Category.Plane:
+                switch ((GameMode.PlaneMode)GameManager.Instance.selectedGameMode.mode) {
+                    case GameMode.PlaneMode.DogFight:
+                        DogfightButton();
+                        break;
+                }
                 break;
         }
     }
 
-    public void SetScores()
-    {
-        switch (GameManager.Instance.selectedGameMode)
-        {
-            case GameManager.GameMode.TimeAttack:
-                break;
-            case GameManager.GameMode.FreeFlight:
-                break;
-            case GameManager.GameMode.DogFight:
-                {
-                    if (GameManager.Instance.currentManager is PlaneGameManager planeManager) {
-                        enemyKills.text = planeManager.enemiesKilled.ToString();
-                        friendlyKills.text = planeManager.friendliesKilled.ToString();
-                    }
-                    break;
+    public void SetScores() {
+        switch (GameManager.Instance.selectedGameMode.category) {
+            case GameMode.Category.Plane:
+                switch ((GameMode.PlaneMode)GameManager.Instance.selectedGameMode.mode) {
+                    case GameMode.PlaneMode.DogFight:
+                        if (GameManager.Instance.currentManager is PlaneGameManager planeManager) {
+                            enemyKills.text = planeManager.enemiesKilled.ToString();
+                            friendlyKills.text = planeManager.friendliesKilled.ToString();
+                        }
+                        break;
                 }
+                break;
         }
     }
 

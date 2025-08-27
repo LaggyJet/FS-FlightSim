@@ -19,21 +19,28 @@ public class UIUpdater : MonoBehaviour {
     void Start() {
         if (GameManager.Instance.currentManager is HeliGameManager heliManager) {
             List<Transform> tfs = new();
-            switch (GameManager.Instance.selectedGameMode) {
-                case GameManager.GameMode.TimeAttack:
-                    curObjectiveObject = GameManager.Instance.uiSettings[0];
-                    //TODO: make sure to update find when adding time attack
-                    curObjectiveText = curObjectiveObject.transform.Find("").GetComponent<TMP_Text>();
-                    curObjectiveMax = GameManager.Instance.modes[0].transform.childCount;
-                    for (int i = 0; i < curObjectiveMax; i++)
-                        tfs.Add(GameManager.Instance.modes[0].transform.GetChild(i));
-                    break;
-                case GameManager.GameMode.ObstacleCourse:
-                    curObjectiveObject = GameManager.Instance.uiSettings[1];
-                    curObjectiveText = curObjectiveObject.transform.Find("LandingZones/Completed").GetComponent<TMP_Text>();
-                    curObjectiveMax = GameManager.Instance.modes[1].transform.childCount;
-                    for (int i = 0; i < curObjectiveMax; i++)
-                        tfs.Add(GameManager.Instance.modes[1].transform.GetChild(i));
+            switch (GameManager.Instance.selectedGameMode.category)
+            {
+                case GameMode.Category.Heli:
+                    switch ((GameMode.HeliMode)GameManager.Instance.selectedGameMode.mode)
+                    {
+                        case GameMode.HeliMode.TimeAttack:
+                            curObjectiveObject = GameManager.Instance.uiSettings[0];
+                            // TODO: make sure to update find when adding TimeAttack
+                            curObjectiveText = curObjectiveObject.transform.Find("").GetComponent<TMP_Text>();
+                            curObjectiveMax = GameManager.Instance.modes[0].transform.childCount;
+                            for (int i = 0; i < curObjectiveMax; i++)
+                                tfs.Add(GameManager.Instance.modes[0].transform.GetChild(i));
+                            break;
+
+                        case GameMode.HeliMode.ObstacleCourse:
+                            curObjectiveObject = GameManager.Instance.uiSettings[1];
+                            curObjectiveText = curObjectiveObject.transform.Find("LandingZones/Completed").GetComponent<TMP_Text>();
+                            curObjectiveMax = GameManager.Instance.modes[1].transform.childCount;
+                            for (int i = 0; i < curObjectiveMax; i++)
+                                tfs.Add(GameManager.Instance.modes[1].transform.GetChild(i));
+                            break;
+                    }
                     break;
             }
             heliManager.objectivesCompleted = new System.Tuple<GameObject, bool>[curObjectiveMax];

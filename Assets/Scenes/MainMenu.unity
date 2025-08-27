@@ -5313,6 +5313,7 @@ MonoBehaviour:
   timerTime: {fileID: 157058200}
   enemyKills: {fileID: 1880216712}
   friendlyKills: {fileID: 450052272}
+  gameModeUI: {fileID: 0}
   canPause: 1
   playButton: {fileID: 10177532}
   firstGameModeButton: {fileID: 640186889}
@@ -5320,6 +5321,8 @@ MonoBehaviour:
   menuBackground: {fileID: 1860764753}
   planeRestartButton: {fileID: 1824075998}
   resumeButton: {fileID: 724121076}
+  heliWinRestartButton: {fileID: 0}
+  heliLoseRestartButton: {fileID: 0}
   titleMenus:
   - {fileID: 1193783868}
   - {fileID: 1652457737}
@@ -6941,16 +6944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPaused: 0
-  selectedGameMode: 0
   currentManager: {fileID: 0}
-  pauseMenu: {fileID: 0}
-  background: {fileID: 0}
-  winMenu: {fileID: 0}
-  loseMenu: {fileID: 0}
-  objectivesMenu: {fileID: 0}
-  pauseButton: {fileID: 0}
-  winButton: {fileID: 0}
-  loseButton: {fileID: 0}
   modes: []
   uiSettings: []
   timeMax: 300

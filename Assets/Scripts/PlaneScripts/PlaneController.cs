@@ -171,13 +171,16 @@ public class PlaneController : MonoBehaviour
         return torque;
     } 
 
-    private bool StartedPlaying()
-    {
+    private bool StartedPlaying() {
         bool returnVal = false;
-        switch(GameManager.Instance.selectedGameMode)
-        {
-            case GameManager.GameMode.DogFight:
-                if (running) returnVal = true;
+        switch(GameManager.Instance.selectedGameMode.category) {
+            case GameMode.Category.Plane:
+                switch ((GameMode.PlaneMode)GameManager.Instance.selectedGameMode.mode) {
+                    case GameMode.PlaneMode.DogFight:
+                    if (running) returnVal = true;
+                    break;
+
+                }
                 break;
         }
         return returnVal;

@@ -22,7 +22,7 @@ public class HeliGameManager : GameManager {
     }
 
     public override IEnumerator WinGame() {
-        EventSystem.current.SetSelectedGameObject(winButton);
+        EventSystem.current.SetSelectedGameObject(UI.Instance.heliWinRestartButton);
         startedGame = false;
         yield return new WaitForSeconds(3f);
         winTimeSpent.text = TimeSpan.FromSeconds(overallTime).ToString(@"hh\:mm\:ss\:fff");
@@ -30,25 +30,25 @@ public class HeliGameManager : GameManager {
         float timeScore = ScoreChecker.GetTimeRank(overallTime);
         winTimeAvg.text = timeScore.ToString("F2");
         winTotalAvg.text = ((timeScore + accuracy) / 2).ToString("F2");
-        background.SetActive(true);
+        UI.Instance.pauseBackground.SetActive(true);
         Time.timeScale = 0;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
-        objectivesMenu.SetActive(false);
-        winMenu.SetActive(true);
+        UI.Instance.gameModeUI.gameObject.SetActive(false);
+        UI.Instance.heliMenus[(int)HeliMenuIndex.WIN].SetActive(true);
     }
 
     public override IEnumerator LoseGame() {
-        EventSystem.current.SetSelectedGameObject(loseButton);
+        EventSystem.current.SetSelectedGameObject(UI.Instance.heliLoseRestartButton);
         startedGame = false;
         yield return new WaitForSeconds(1f);
         loseCurTime.text = TimeSpan.FromSeconds(overallTime).ToString(@"hh\:mm\:ss\:fff");
-        background.SetActive(true);
+        UI.Instance.pauseBackground.SetActive(true);
         Time.timeScale = 0;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
-        objectivesMenu.SetActive(false);
-        loseMenu.SetActive(true);
+        UI.Instance.gameModeUI.gameObject.SetActive(false);
+        UI.Instance.heliMenus[(int)HeliMenuIndex.LOSE].SetActive(true);
     }
 
     public override void ResetVals() {

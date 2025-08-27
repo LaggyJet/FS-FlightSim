@@ -1,13 +1,23 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(AudioSource))]
 public class AudioController : MonoBehaviour {
     static public AudioController Instance { get; private set; }
-    AudioSource backgroundAudioSource = null, heliAudioSource = null;
+    AudioSource backgroundAudioSource = null, heliLevelAudioSource = null;
 
-    public enum BackgroundTypes { Background, Level };
+    public enum BackgroundTypes { Menu, Level };
     public enum LevelTypes { Crash, Heli };
-    public AudioClip backgroundAudio, levelAudio, heliBlades, heliCrash;
+    [Header("General Music")]
+    public AudioClip mainScreenAudio;
+    [Space]
+    [Header("Helicopter Audio")]
+    public AudioClip heliLevelAudio;
+    public AudioClip heliBlades;
+    public AudioClip heliCrash;
+    [Space]
+    [Header("Plane Audio")]
+    public AudioClip planeGunShots;
 
     void Awake() {
         if (Instance != null && Instance != this)
@@ -16,22 +26,22 @@ public class AudioController : MonoBehaviour {
             Instance = this;
             backgroundAudioSource = GetComponent<AudioSource>();
             DontDestroyOnLoad(gameObject);
-            SetBackgroundAudio(BackgroundTypes.Background);
+            SetBackgroundAudio(BackgroundTypes.Menu);
         }
     }
 
-    public void SetHeliAudioSource(AudioSource source) { heliAudioSource = source; }
+    public void SetHeliAudioSource(AudioSource source) { heliLevelAudioSource = source; }
 
     public void SetBackgroundAudio(BackgroundTypes type) {
         backgroundAudioSource.Stop();
         switch (type) {
-            case BackgroundTypes.Background:
-                if (backgroundAudioSource.clip != backgroundAudio)            
-                    backgroundAudioSource.clip = backgroundAudio;
+            case BackgroundTypes.Menu:
+                if (backgroundAudioSource.clip != mainScreenAudio)
+                    backgroundAudioSource.clip = mainScreenAudio;
                 break;
             case BackgroundTypes.Level:
-                if (backgroundAudioSource.clip != levelAudio)
-                    backgroundAudioSource.clip = levelAudio;
+                if (backgroundAudioSource.clip != heliLevelAudio)
+                    backgroundAudioSource.clip = heliLevelAudio;
                 break;
         }
         backgroundAudioSource.loop = true;
@@ -40,11 +50,11 @@ public class AudioController : MonoBehaviour {
 
     public void StopBackgroundAudio() { backgroundAudioSource.Stop(); }
 
-    public void StopHeliAudio() { heliAudioSource.Stop(); }
+    public void StopHeliAudio() { heliLevelAudioSource.Stop(); }
 
     public void StartBackgroundAudio() { backgroundAudioSource.Play(); }
 
-    public void StartHeliAudio() { heliAudioSource.Play(); }
+    public void StartHeliAudio() { heliLevelAudioSource.Play(); }
 
     public void FadeAudio(float fadeDuration, BackgroundTypes type) { StartCoroutine(Fade(fadeDuration, type)); }
 
@@ -67,25 +77,29 @@ public class AudioController : MonoBehaviour {
     }
 
     IEnumerator Fade(float fadeDuration, LevelTypes type) {
-        float startVolume = heliAudioSource.volume;
-        while (heliAudioSource.volume < startVolume) {
-            heliAudioSource.volume += startVolume / Time.deltaTime * fadeDuration;
+        float startVolume = heliLevelAudioSource.volume;
+        while (heliLevelAudioSource.volume < startVolume) {
+            heliLevelAudioSource.volume += startVolume / Time.deltaTime * fadeDuration;
             yield return null;
         }
-        heliAudioSource.volume = startVolume;
+        heliLevelAudioSource.volume = startVolume;
     }
     
     public void PlayAudio(LevelTypes type) {
         switch (type) {
             case LevelTypes.Crash:
-                heliAudioSource.PlayOneShot(heliCrash);
+                heliLevelAudioSource.PlayOneShot(heliCrash);
                 break;
             case LevelTypes.Heli:
-                heliAudioSource.volume = .75f;
-                heliAudioSource.clip = heliBlades;
-                heliAudioSource.loop = true;
-                heliAudioSource.Play();
+                heliLevelAudioSource.volume = .75f;
+                heliLevelAudioSource.clip = heliBlades;
+                heliLevelAudioSource.loop = true;
+                heliLevelAudioSource.Play();
                 break;
         }
     }
+
+    public void DecreaseAudio(int amount) { backgroundAudioSource.volume -= amount/100.0f; }
+
+    public void IncreaseAudio(int amount) { backgroundAudioSource.volume += amount/100.0f; }
 }

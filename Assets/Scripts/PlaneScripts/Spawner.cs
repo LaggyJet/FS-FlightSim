@@ -8,17 +8,20 @@ public class Spawner : MonoBehaviour
     float time = 0f;
 
     
-    void Update()
+    void Update() 
     {
-        if (enemySpawner && GameManager.Instance.enemies >= GameManager.Instance.enemiesMax) return;
-        else if (!enemySpawner && GameManager.Instance.friendlies >= GameManager.Instance.friendliesMax) return;
-        time += Time.deltaTime;
-        if(time > timer)
+        if (GameManager.Instance.currentManager is PlaneGameManager planeManager)
         {
-            if (enemySpawner) GameManager.Instance.enemies++;
-            else GameManager.Instance.friendlies++;
-            Instantiate(plane, spawnPOS.transform.position, spawnPOS.transform.rotation, spawnPOS.transform.parent);
-            time = 0f;
+            if (enemySpawner && planeManager.enemies >= planeManager.enemiesMax) return;
+            else if (!enemySpawner && planeManager.friendlies >= planeManager.friendliesMax) return;
+            time += Time.deltaTime;
+            if(time > timer)
+            {
+                if (enemySpawner) planeManager.enemies++;
+                else planeManager.friendlies++;
+                Instantiate(plane, spawnPOS.transform.position, spawnPOS.transform.rotation, spawnPOS.transform.parent);
+                time = 0f;
+            }
         }
     }
 }

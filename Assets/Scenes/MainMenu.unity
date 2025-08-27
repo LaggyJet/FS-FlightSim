@@ -182,7 +182,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1275704239}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UI, Assembly-CSharp
         m_MethodName: PlayButton
         m_Mode: 1
@@ -471,7 +471,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1275704239}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MenuButtons, Assembly-CSharp
         m_MethodName: ExitButton
         m_Mode: 1
@@ -1386,7 +1386,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1275704239}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UI, Assembly-CSharp
         m_MethodName: ReturnHome
         m_Mode: 1
@@ -2768,7 +2768,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1275704239}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MenuButtons, Assembly-CSharp
         m_MethodName: DogfightButton
         m_Mode: 1
@@ -3084,7 +3084,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1275704239}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UI, Assembly-CSharp
         m_MethodName: UnPause
         m_Mode: 1
@@ -3484,7 +3484,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1275704239}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UI, Assembly-CSharp
         m_MethodName: ReturnHome
         m_Mode: 1
@@ -3549,7 +3549,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1193783869
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3718,7 +3718,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1275704240}
-  - component: {fileID: 1275704239}
   - component: {fileID: 1275704238}
   - component: {fileID: 1275704237}
   - component: {fileID: 1275704236}
@@ -3840,37 +3839,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &1275704239
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1275704233}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cab4f8d0d5b58964d98c12d68acac598, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameModes: {fileID: 1762067354}
-  pauseBackground: {fileID: 1323325368}
-  heliScorePlaceholder: {fileID: 0}
-  timerTime: {fileID: 157058200}
-  enemyKills: {fileID: 1880216712}
-  friendlyKills: {fileID: 450052272}
-  canPause: 1
-  mainMenu: {fileID: 1193783868}
-  settingsMenu: {fileID: 1652457737}
-  gameModesMenu: {fileID: 1851829617}
-  loseMenu: {fileID: 1660087522}
-  pauseMenu: {fileID: 2067345666}
-  winMenu: {fileID: 0}
-  mainButton: {fileID: 10177532}
-  gameModesButton: {fileID: 640186889}
-  settingsButton: {fileID: 1379841591}
-  menuBackground: {fileID: 1860764753}
-  loseButton: {fileID: 1824075998}
-  resumeButton: {fileID: 724121076}
 --- !u!224 &1275704240
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4036,7 +4004,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1275704239}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MenuButtons, Assembly-CSharp
         m_MethodName: BackButton
         m_Mode: 1
@@ -4461,7 +4429,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1275704239}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MenuButtons, Assembly-CSharp
         m_MethodName: SettingsButton
         m_Mode: 1
@@ -4928,54 +4896,16 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1644224923}
-  - component: {fileID: 1644224922}
-  - component: {fileID: 1644224921}
+  - component: {fileID: 1644224925}
+  - component: {fileID: 1644224924}
+  - component: {fileID: 1644224926}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: Managers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1644224921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1644224920}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a26a19826fb63d84d8aa99800deb2846, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debug: 0
-  isPaused: 0
-  selectedGameMode: 0
-  enemies: 0
-  enemiesKilled: 0
-  enemiesMax: 100
-  friendlies: 0
-  friendliesKilled: 0
-  friendliesMax: 100
-  runTimer: 0
-  timeNow: 0
-  timeMax: 300
---- !u!114 &1644224922
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1644224920}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3d3059faf2d72d44ba002ba9b591408, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  port: COM3
-  baud: 115200
-  resDropDown: {fileID: 572829944}
 --- !u!4 &1644224923
 Transform:
   m_ObjectHideFlags: 0
@@ -4991,6 +4921,135 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1644224924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1644224920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00fd8488f22025d478e8b42a074cab93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainScreenAudio: {fileID: 8300000, guid: f9610cd8cb9abb249b6d5e013a432a63, type: 3}
+  heliLevelAudio: {fileID: 8300000, guid: ea3f8381b04c69d4f81491bc26d660af, type: 3}
+  heliBlades: {fileID: 8300000, guid: e923bea3c4408df46ac224c7126ee0d5, type: 3}
+  heliCrash: {fileID: 8300000, guid: 54c6796ea108ce5479ad22e774df748a, type: 3}
+  planeGunShots: {fileID: 8300000, guid: d4ffa4780baaaa34c97d5ac2e71465d2, type: 3}
+--- !u!82 &1644224925
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1644224920}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1644224926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1644224920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89b617209d19fba4e8d21ac3a4924222, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  port: COM3
+  baud: 115200
+  resDropDown: {fileID: 572829944}
 --- !u!1 &1652457737
 GameObject:
   m_ObjectHideFlags: 0
@@ -5044,7 +5103,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1660087523
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5576,7 +5635,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1275704239}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UI, Assembly-CSharp
         m_MethodName: RestartButton
         m_Mode: 1
@@ -6546,7 +6605,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1275704239}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MenuButtons, Assembly-CSharp
         m_MethodName: BackButton
         m_Mode: 1

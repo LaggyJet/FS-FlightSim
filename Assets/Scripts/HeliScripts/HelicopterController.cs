@@ -89,19 +89,20 @@ public class HelicopterController : MonoBehaviour {
     void OnLeanRight(InputValue value) { isLeaningRight = value.isPressed; }
 
     void OnTurnOn() {
-        GameManager.Instance.startedGame = true;
-        AudioController.Instance.PlayAudio(AudioController.LevelTypes.Heli);
-        if (!isSpinningDown && currentRotorSpeed < maxRotorSpeed && !isSpinningUp) {
-            isSpinningUp = true;
-            spinUpTimer = spinUpTime;
-            currentRotorSpeed = 0f;
-        }
+        if (GameManager.Instance.currentManager is HeliGameManager heliManager)
+            heliManager.startedGame = true;
+            AudioController.Instance.PlayAudio(AudioController.LevelTypes.Heli);
+            if (!isSpinningDown && currentRotorSpeed < maxRotorSpeed && !isSpinningUp) {
+                isSpinningUp = true;
+                spinUpTimer = spinUpTime;
+                currentRotorSpeed = 0f;
+            }
     }
 
     void OnShutdown() { 
-        if (currentRotorSpeed > 0f && !isSpinningUp && isGrounded) { 
+        if (currentRotorSpeed > 0f && !isSpinningUp && isGrounded && GameManager.Instance.currentManager is HeliGameManager heliManager) { 
             isSpinningDown = true;
-            if (GameManager.Instance.finishedObjectives)
+            if (heliManager.finishedObjectives)
                 GameManager.Instance.CallWinGame();
         } 
     }
@@ -196,10 +197,10 @@ public class HelicopterController : MonoBehaviour {
             skiRLanded = true;
         else if (skiPart == HelicopterPartCollisionHandler.PartType.SkiL) 
             skiLLanded = true;
-        if (skiRLanded && skiLLanded) {
+        if (skiRLanded && skiLLanded && GameManager.Instance.currentManager is HeliGameManager heliManager) {
             bool wasCompleted = false;
             int objectIndex = -1;
-            var gObject = GameManager.Instance.objectivesCompleted;
+            var gObject = heliManager.objectivesCompleted;
             for (int i = 0; i < gObject.Length; i++) {
                 if (collision.gameObject == gObject[i].Item1) {
                     objectIndex = i;
@@ -209,9 +210,9 @@ public class HelicopterController : MonoBehaviour {
             }
             if (!wasCompleted) {
                 UIUpdater.Instance.UpdateCurrentObjectiveScore();
-                GameManager.Instance.objectivesCompleted[objectIndex] = Tuple.Create(gObject[objectIndex].Item1, true);
-                GameManager.Instance.objectiveAccuries[objectIndex] = ScoreChecker.GetHeliPadAccuracy(transform.position.x - collision.transform.position.x, transform.position.z - collision.transform.position.z);
-                GameManager.Instance.accuracy = ScoreChecker.GetOverallAccuracy(GameManager.Instance.objectiveAccuries);
+                heliManager.objectivesCompleted[objectIndex] = Tuple.Create(gObject[objectIndex].Item1, true);
+                heliManager.objectiveAccuries[objectIndex] = ScoreChecker.GetHeliPadAccuracy(transform.position.x - collision.transform.position.x, transform.position.z - collision.transform.position.z);
+                heliManager.accuracy = ScoreChecker.GetOverallAccuracy(heliManager.objectiveAccuries);
                 
             }
             isGrounded = true;

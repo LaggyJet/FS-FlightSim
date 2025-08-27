@@ -117,6 +117,7 @@ public class UI : MonoBehaviour {
         EventSystem.current.SetSelectedGameObject(mainButton);
         menuBackground.SetActive(true);
         SceneManager.LoadSceneAsync("MainMenu");
+        AudioController.Instance.FadeAudio(3f, AudioController.BackgroundTypes.Menu);
     }
 
     void LoadGame( string scene, GameManager.GameMode mode) {
@@ -124,6 +125,7 @@ public class UI : MonoBehaviour {
         GameManager.Instance.selectedGameMode = mode;
         GameManager.Instance.ResumeGame();
         EnterGameMode();
+        AudioController.Instance.FadeAudio(3f, AudioController.BackgroundTypes.Level);
     }
 
 
@@ -131,7 +133,8 @@ public class UI : MonoBehaviour {
     public void RestartButton() {
         UnPause();
         canPause = true ;
-        GameManager.Instance.ResetVals();
+        if (GameManager.Instance.currentManager is PlaneGameManager planeManager)
+            planeManager.ResetVals();
         switch (GameManager.Instance.selectedGameMode) {
             case GameManager.GameMode.TimeAttack:
                 TimeAttackButton();
@@ -158,8 +161,10 @@ public class UI : MonoBehaviour {
                 break;
             case GameManager.GameMode.DogFight:
                 {
-                    enemyKills.text = GameManager.Instance.enemiesKilled.ToString();
-                    friendlyKills.text = GameManager.Instance.friendliesKilled.ToString();
+                    if (GameManager.Instance.currentManager is PlaneGameManager planeManager) {
+                        enemyKills.text = planeManager.enemiesKilled.ToString();
+                        friendlyKills.text = planeManager.friendliesKilled.ToString();
+                    }
                     break;
                 }
         }

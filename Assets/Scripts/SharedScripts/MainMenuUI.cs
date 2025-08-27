@@ -38,25 +38,35 @@ public class MenuButtons : MonoBehaviour {
 
     public void ContinueGame() { GameManager.Instance.ResumeGame(); }
 
-    public void ReturnHome() { SceneManager.LoadScene("MainMenu"); EventSystem.current.SetSelectedGameObject(mainButton); }
+    public void ReturnHome() { LoadMainScene(); EventSystem.current.SetSelectedGameObject(mainButton); }
 
     public void BackButton() { EnableMenu(mainMenu); EventSystem.current.SetSelectedGameObject(mainButton); }
 
-    public void TimeAttackButton() { SceneManager.LoadScene("MainScene"); Settings.Instance.selectedGameMode = Settings.GameMode.TimeAttack; }
+    public void TimeAttackButton() { LoadGame(); GameManager.Instance.selectedGameMode = GameManager.GameMode.TimeAttack; }
 
-    public void FreeFlightButton() { SceneManager.LoadScene("MainScene"); Settings.Instance.selectedGameMode = Settings.GameMode.FreeFlight; }
+    public void FreeFlightButton() { LoadGame(); GameManager.Instance.selectedGameMode = GameManager.GameMode.FreeFlight; }
 
-    public void ObstacleCourseButton() { SceneManager.LoadScene("MainScene"); Settings.Instance.selectedGameMode = Settings.GameMode.ObstacleCourse; }
+    public void ObstacleCourseButton() { LoadGame(); GameManager.Instance.selectedGameMode = GameManager.GameMode.ObstacleCourse; }
+
+    void LoadMainScene() {
+        SceneManager.LoadScene("MainMenu");
+        AudioController.Instance.FadeAudio(3f, AudioController.BackgroundTypes.Menu);
+    }
+
+    void LoadGame() {
+        SceneManager.LoadScene("MainScene");
+        AudioController.Instance.FadeAudio(3f, AudioController.BackgroundTypes.Level);
+    }
 
     public void RestartButton() {
-        switch (Settings.Instance.selectedGameMode) {
-            case Settings.GameMode.TimeAttack:
+        switch (GameManager.Instance.selectedGameMode) {
+            case GameManager.GameMode.TimeAttack:
                 TimeAttackButton();
                 break;
-            case Settings.GameMode.FreeFlight:
+            case GameManager.GameMode.FreeFlight:
                 FreeFlightButton();
                 break;
-            case Settings.GameMode.ObstacleCourse:
+            case GameManager.GameMode.ObstacleCourse:
                 ObstacleCourseButton();
                 break;
         }

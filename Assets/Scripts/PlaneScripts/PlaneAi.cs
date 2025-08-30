@@ -209,7 +209,7 @@ public class PlaneAi : MonoBehaviour
         if (!crashing && hp <= 0)
         {
             crashing = true;
-            if (owner.GetComponents<PlaneController>() != null && GameManager.Instance.currentManager is PlaneGameManager planeManager)
+            if (owner.GetComponents<PlaneController>() != null && GameManager.Instance.currentModeManager is PlaneGameManager planeManager)
             {
                 if(enemyAi) planeManager.enemiesKilled += 1;
                 else planeManager.friendliesKilled += 1;
@@ -227,7 +227,7 @@ public class PlaneAi : MonoBehaviour
 
     public void Explode()
     {
-        if (GameManager.Instance.currentManager is PlaneGameManager planeManager)
+        if (GameManager.Instance.currentModeManager is PlaneGameManager planeManager)
         {
             if (enemyAi) planeManager.enemies--;
             else planeManager.friendlies--;

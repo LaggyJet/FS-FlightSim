@@ -61,7 +61,6 @@ public class AudioController : MonoBehaviour {
     public void FadeAudioIn(float fadeDuration, LevelTypes type) { StartCoroutine(Fade(fadeDuration, type)); }
 
     IEnumerator Fade(float fadeDuration, BackgroundTypes type) {
-        print(type);
         float startVolume = backgroundAudioSource.volume;
         while (backgroundAudioSource.volume > 0.05f) {
             backgroundAudioSource.volume -= startVolume * Time.deltaTime / fadeDuration;

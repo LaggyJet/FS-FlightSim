@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using TMPro;
+using System.Linq;
+using System;
 
 public class UI : MonoBehaviour {
     static public UI Instance {  get; private set; }
     
     [Header("UI Variables")]
     [SerializeField] GameObject planeLevelTimer;
-    [SerializeField] public GameObject pauseBackground;
+    public GameObject pauseBackground;
     [SerializeField] TMP_Text heliScorePlaceholder;
     [SerializeField] TMP_Text timerTime;
     [SerializeField] TMP_Text enemyKills;
@@ -25,8 +27,8 @@ public class UI : MonoBehaviour {
     [SerializeField] GameObject menuBackground;
     [SerializeField] GameObject planeRestartButton;
     [SerializeField] GameObject resumeButton;
-    [SerializeField] public GameObject heliWinRestartButton;
-    [SerializeField] public GameObject heliLoseRestartButton;
+    public GameObject heliWinRestartButton;
+    public GameObject heliLoseRestartButton;
     [Space]
 
     [Header("Main Title, Settings, GameModes")]
@@ -44,19 +46,29 @@ public class UI : MonoBehaviour {
 
     [Header("Heli Win, Heli Lose")]
     public List<GameObject> heliMenus = new();
+    [Space]
 
-    IEnumerable<GameObject> Menus {
-        get {
-            foreach (var menu in titleMenus) yield return menu;
-            foreach (var menu in generalMenus) yield return menu;
-            foreach (var menu in planeMenus) yield return menu;
-            foreach (var menu in heliMenus) yield return menu;
-        }
-    }
+    [Header("Heli Objectives")]
+    public GameObject[] heliObjectives;
+    [Space]
+
+    [Header("Heli Launcher Things")]
+    public GameObject warningTextContainer;
+    public TMP_Text warningText, countdownText;
+    [Space]
+
+    [Header("Heli Win/Lose Info Params")]
+    [SerializeField] TMP_Text loseCurTime;
+    [SerializeField] TMP_Text winTimeSpent;
+    [SerializeField] TMP_Text winAccAvg;
+    [SerializeField] TMP_Text winTimeAvg;
+    [SerializeField] TMP_Text winTotalAvg;
+
+    IEnumerable<GameObject> Menus => new[] { titleMenus, generalMenus, planeMenus, heliMenus }.SelectMany(m => m);
     
 
     void Awake() {
-        //singleton code
+        //Singleton code
         if (Instance != null && Instance != this)
             Destroy(gameObject);
         else
@@ -64,45 +76,17 @@ public class UI : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    //UI CODE
-
-
-    public void EnterGameMode()
-    {
-        CloseMenus();
-        planeLevelTimer.SetActive(true);
-        gameModeUI = planeLevelTimer.transform.Find(GameManager.Instance.selectedGameMode.ToString());
-        gameModeUI.gameObject.SetActive(true);
+    //Title Menu Buttons
+    public void PlayButton() { 
+        EnableMenu(titleMenus[(int)TitleMenuIndex.GAME_MODES]); 
+        EventSystem.current.SetSelectedGameObject(firstGameModeButton); 
     }
 
-    public void ExitGameMode()
-    {
-        GameManager.Instance.ResetVals();
-        CloseMenus();
-        gameModeUI.gameObject.SetActive(false);
-        gameModeUI = null;
-        planeLevelTimer.SetActive(false);
-        GameManager.Instance.selectedGameMode = GameMode.None;
+    public void SettingsButton() { 
+        EnableMenu(titleMenus[(int)TitleMenuIndex.SETTINGS]); 
+        EventSystem.current.SetSelectedGameObject(firstSettingButton); 
     }
-
-    public void ShowWarning(bool mode)
-    {
-        if(warning == null) warning = gameModeUI.transform.Find("Warning").gameObject;
-        warning.SetActive(mode);
-    }
-
-
-    //MENUS AND BUTTONS CODE
-
-    public void Lose() { canPause = false; planeLevelTimer.SetActive(false); pauseBackground.SetActive(true); EnableMenu(planeMenus[(int)PlaneMenuIndex.GAME_OVER]); EventSystem.current.SetSelectedGameObject(planeRestartButton); SetScores(); GameManager.Instance.Stop(); }
-    public void Pause() { if (canPause) { pauseBackground.SetActive(true); planeLevelTimer.SetActive(false); EnableMenu(generalMenus[(int)GeneralMenuIndex.PAUSE]); EventSystem.current.SetSelectedGameObject(resumeButton); } }
-    public void Win() { canPause = false; planeLevelTimer.SetActive(false); }
-    public void EnableMenu(GameObject menu) { foreach (GameObject menu_ in Menus) menu_.SetActive(menu == menu_);  }
-    public void CloseMenus() { foreach (GameObject menu_ in Menus) { menu_.SetActive(false); } menuBackground.SetActive(false); pauseBackground.SetActive(false);  }
-    public void PlayButton() { EnableMenu(titleMenus[(int)TitleMenuIndex.GAME_MODES]); EventSystem.current.SetSelectedGameObject(firstGameModeButton); }
-  
-    public void SettingsButton() { EnableMenu(titleMenus[(int)TitleMenuIndex.SETTINGS]); EventSystem.current.SetSelectedGameObject(firstSettingButton); }
-
+    
     public void ExitButton() {
         #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
@@ -111,24 +95,185 @@ public class UI : MonoBehaviour {
         #endif
     }
 
-    public void UnPause() { if (canPause) { CloseMenus(); planeLevelTimer.SetActive(true); GameManager.Instance.Continue(); } }
+    //Plane Game Mode Buttons
+    public void DogfightButton() {
+        LoadGame("PlaneMainScene", GameMode.DogFight);
+        CloseMenus();
+        if (GameManager.Instance.currentModeManager is PlaneGameManager planeManager)
+            SetTimer(planeManager.timeMax);
+    }
+
+    //Heli Game Mode Buttons
+    public void TimeAttackButton() { 
+        LoadGame("HeliMainScene", GameMode.TimeAttack); 
+        CloseMenus(); 
+    }
+
+    public void FreeFlightButton() {
+        LoadGame("HeliMainScene", GameMode.FreeFlight); 
+        CloseMenus(); 
+    }
+
+    public void ObstacleCourseButton() { 
+        LoadGame("HeliMainScene", GameMode.ObstacleCourse); 
+        CloseMenus(); 
+    }
+
+    //Helper UI Functions
+    void LoadGame(string scene, GameMode mode) {
+        Time.timeScale = 1;
+        GameManager.Instance.SetGameManager(mode);
+        SceneManager.LoadScene(scene);
+        GameManager.Instance.EnableGameMode(mode);
+        AudioController.Instance.FadeAudio(3f, AudioController.BackgroundTypes.Level);
+
+
+        //GameManager.Instance.ResumeGame();
+
+
+
+
+        if (GameManager.Instance.currentModeManager is PlaneGameManager)
+            EnterGameMode();
+    }
+
+    public void EnterGameMode() {
+        planeLevelTimer.SetActive(true);
+        gameModeUI = planeLevelTimer.transform.Find(GameManager.Instance.selectedGameMode.ToString());
+        gameModeUI.gameObject.SetActive(true);
+    }
+
+    public void ExitGameMode() {
+        GameManager.Instance.currentModeManager.ResetVals();
+        gameModeUI.gameObject.SetActive(false);
+        gameModeUI = null;
+        planeLevelTimer.SetActive(false);
+        GameManager.Instance.selectedGameMode = GameMode.None;
+    }
+
+    public void EnableMenu(GameObject menu) { 
+        foreach (GameObject menu_ in Menus) 
+            menu_.SetActive(menu == menu_); 
+    }
+    
+    public void CloseMenus() { 
+        foreach (GameObject menu_ in Menus) 
+            menu_.SetActive(false);  
+        menuBackground.SetActive(false); 
+        pauseBackground.SetActive(false); 
+    }
+
+    //UI Updater Functions
+    public void ShowWarning(bool mode) {
+        if(warning == null) 
+            warning = gameModeUI.transform.Find("Warning").gameObject;
+        warning.SetActive(mode);
+    }
+
+    public void SetHeliObjectives() {
+        if (GameManager.Instance.currentModeManager is HeliGameManager heliManager) {
+            heliManager.uiSettings = heliObjectives;
+            if (GameManager.Instance.selectedGameMode.mode != (int)GameMode.HeliMode.FreeFlight)
+                heliManager.uiSettings[0].transform.parent.gameObject.SetActive(true);
+            List<Transform> tfs = new();
+            switch (GameManager.Instance.selectedGameMode.category) {
+                case GameMode.Category.Heli:
+                    switch ((GameMode.HeliMode)GameManager.Instance.selectedGameMode.mode) {
+                        case GameMode.HeliMode.TimeAttack:
+                            heliManager.curObjectiveObject = heliManager.uiSettings[0];
+                            // TODO: make sure to update find when adding TimeAttack
+                            heliManager.curObjectiveText = heliManager.curObjectiveObject.transform.Find("").GetComponent<TMP_Text>();
+                            heliManager.curObjectiveMax = heliManager.modes[0].transform.childCount;
+                            for (int i = 0; i < heliManager.curObjectiveMax; i++)
+                                tfs.Add(heliManager.modes[0].transform.GetChild(i));
+                            break;
+
+                        case GameMode.HeliMode.ObstacleCourse:
+                            heliManager.curObjectiveObject = heliManager.uiSettings[1];
+                            heliManager.curObjectiveText = heliManager.curObjectiveObject.transform.Find("LandingZones/Completed").GetComponent<TMP_Text>();
+                            heliManager.curObjectiveMax = heliManager.modes[1].transform.childCount;
+                            for (int i = 0; i < heliManager.curObjectiveMax; i++)
+                                tfs.Add(heliManager.modes[1].transform.GetChild(i));
+                            break;
+                    }
+                    heliManager.objectivesCompleted = new System.Tuple<GameObject, bool>[heliManager.curObjectiveMax];
+                    heliManager.objectiveAccuries = new float[heliManager.curObjectiveMax];
+                    for (int i = 0; i < tfs?.Count; i++)
+                        heliManager.objectivesCompleted[i] = Tuple.Create(tfs[i].gameObject, false);
+                    break;
+            }
+        }
+    }
+
+    public void UpdateCurrentHeliObjectiveScore(int newScore = int.MinValue) {
+        if (GameManager.Instance.currentModeManager is HeliGameManager heliManager) {
+            if (!int.TryParse(heliManager.curObjectiveText.text, out int score))
+                score = -1;
+            heliManager.curScore = score + (newScore == int.MinValue ? 1 : newScore);
+            heliManager.curObjectiveText.text = heliManager.curScore.ToString();
+            if (heliManager.curScore >= heliManager.curObjectiveMax)
+                heliManager.finishedObjectives = true;
+        }
+    }
+
+    public void SetHeliUI() {
+        if (GameManager.Instance.currentModeManager is HeliGameManager heliManager) {
+            heliManager.loseCurTime = loseCurTime;
+            heliManager.winTimeSpent = winTimeSpent;
+            heliManager.winAccAvg = winAccAvg;
+            heliManager.winTimeAvg = winTimeAvg;
+            heliManager.winTotalAvg = winTotalAvg;
+        }
+    }
+
+    public void SetPlaneUI() {
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void Lose() { canPause = false; planeLevelTimer.SetActive(false); pauseBackground.SetActive(true); EnableMenu(planeMenus[(int)PlaneMenuIndex.GAME_OVER]); EventSystem.current.SetSelectedGameObject(planeRestartButton); SetScores(); GameManager.Instance.Stop(); }
+    public void Pause() { if (canPause) { pauseBackground.SetActive(true); planeLevelTimer.SetActive(false); EnableMenu(generalMenus[(int)GeneralMenuIndex.PAUSE]); EventSystem.current.SetSelectedGameObject(resumeButton); } }
+    public void Win() { canPause = false; planeLevelTimer.SetActive(false); }
+    
+  
+
+
+    public void UnPause() { 
+        if (canPause) { 
+            CloseMenus(); 
+            //planeLevelTimer.SetActive(true);
+            GameManager.Instance.Continue(); 
+        } 
+    }
 
     public void ReturnHome() { LoadMainMenu(); }
 
     public void BackButton() { EnableMenu(titleMenus[(int)TitleMenuIndex.MAIN_TITLE]); EventSystem.current.SetSelectedGameObject(playButton); }
 
-    public void TimeAttackButton() { LoadGame("HeliMainScene", GameMode.TimeAttack); CloseMenus(); }
+    
 
-    public void FreeFlightButton() { LoadGame("HeliMainScene", GameMode.FreeFlight); CloseMenus(); }
-
-    public void ObstacleCourseButton() { LoadGame("HeliMainScene", GameMode.ObstacleCourse); CloseMenus(); }
-
-    public void DogfightButton() { LoadGame("PlaneMainScene", GameMode.DogFight); CloseMenus(); SetTimer(GameManager.Instance.timeMax); }
+    
 
     void LoadMainMenu() {
         Time.timeScale = 1;
         canPause = true;
-        ExitGameMode();
+        //ExitGameMode();
+        pauseBackground.SetActive(false);
         EnableMenu(titleMenus[(int)TitleMenuIndex.MAIN_TITLE]);
         EventSystem.current.SetSelectedGameObject(playButton);
         menuBackground.SetActive(true);
@@ -136,21 +281,14 @@ public class UI : MonoBehaviour {
         AudioController.Instance.FadeAudio(3f, AudioController.BackgroundTypes.Menu);
     }
 
-    void LoadGame(string scene, GameMode mode) {
-        GameManager.Instance.SetGameManager(mode);
-        SceneManager.LoadScene(scene);
-        GameManager.Instance.selectedGameMode = mode;
-        GameManager.Instance.ResumeGame();
-        EnterGameMode();
-        AudioController.Instance.FadeAudio(3f, AudioController.BackgroundTypes.Level);
-    }
+    
 
 
 
     public void RestartButton() {
         UnPause();
         canPause = true;
-        if (GameManager.Instance.currentManager is PlaneGameManager planeManager)
+        if (GameManager.Instance.currentModeManager is PlaneGameManager planeManager)
             planeManager.ResetVals();
         switch (GameManager.Instance.selectedGameMode.category) {
             case GameMode.Category.Heli:
@@ -182,7 +320,7 @@ public class UI : MonoBehaviour {
             case GameMode.Category.Plane:
                 switch ((GameMode.PlaneMode)GameManager.Instance.selectedGameMode.mode) {
                     case GameMode.PlaneMode.DogFight:
-                        if (GameManager.Instance.currentManager is PlaneGameManager planeManager) {
+                        if (GameManager.Instance.currentModeManager is PlaneGameManager planeManager) {
                             enemyKills.text = planeManager.enemiesKilled.ToString();
                             friendlyKills.text = planeManager.friendliesKilled.ToString();
                         }
@@ -197,7 +335,7 @@ public class UI : MonoBehaviour {
         int secs = (int)time % 60;
 
         if (mins <= 0 && secs <= 0)
-            StartCoroutine(GameManager.Instance.currentManager.LoseGame());
+            StartCoroutine(GameManager.Instance.currentModeManager.LoseGame());
         string minString;
         string secsString;
 

@@ -16,3 +16,9 @@ enum HeliMenuIndex {
     WIN = 0, 
     LOSE = 1
 }
+
+enum HeliModeIndex {
+    FreeFlight = 2,
+    TimeAttack = 3,
+    ObstacleCourse = 4
+}

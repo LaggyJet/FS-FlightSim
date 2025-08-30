@@ -2,28 +2,30 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class PlaneGameManager : GameManager {
+[CreateAssetMenu(fileName = "Plane Manager", menuName = "GameManagers/Plane Manager")]
+public class PlaneGameManager : BaseModeManager {
     //Debug
     [SerializeField, HideInDebugUI] bool debug;
 
     [Tooltip("DogFight Variables")]
     public int enemies = 0;
     public int enemiesKilled = 0;
-    [SerializeField] public int enemiesMax = 100;
+    public int enemiesMax = 100;
     public int friendlies = 0;
     public int friendliesKilled = 0;
-    [SerializeField] public int friendliesMax = 100;
+    public int friendliesMax = 100;
     public bool runTimer = false;
     public float timeNow = 0f;
+    public float timeMax = 300f;
 
-    void Update() {
+    public override void ModeUpdate() {
         if (debug) {
             for (int i = 0; i < 20; i++)
                 if (Input.GetKeyDown("joystick button " + i))
                     UnityEngine.Debug.Log("Button " + i + " was pressed!");
         }
         if (runTimer) { timeNow += Time.deltaTime; UI.Instance.SetTimer(timeMax - timeNow); }
-        if (Input.GetButtonDown("Cancel") && selectedGameMode != GameMode.None) OnPauseResume();
+        if (Input.GetButtonDown("Cancel") && GameManager.Instance.selectedGameMode != GameMode.None) GameManager.Instance.OnPauseResume();
     }
 
     public override IEnumerator WinGame() {

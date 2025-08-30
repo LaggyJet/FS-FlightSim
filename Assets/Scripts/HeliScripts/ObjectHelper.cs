@@ -3,20 +3,19 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class ObjectHelper : MonoBehaviour {
-    static public void Explode(GameObject gameObject) {
+    static public void ExplodeObject(GameObject gameObject, float force) {
         MeshFilter[] mf = gameObject.transform.GetComponentsInChildren<MeshFilter>();
 
         List<Rigidbody> bodies = new();
-        for (int i = 0; i < mf.Length; i++) {
-            MeshFilter child = mf[i];
-            MeshCollider mc = child.AddComponent<MeshCollider>();
-            mc.convex = true;
+        foreach (MeshFilter child in mf) {
             Rigidbody rb = child.AddComponent<Rigidbody>();
             rb.useGravity = true;
+            child.AddComponent<MeshCollider>().convex = true;
             bodies.Add(rb);
         }
 
-        for (int i = 0; i < bodies.Count; i++)
-            bodies[i].AddForce(3 * (Random.onUnitSphere + Vector3.up), ForceMode.VelocityChange);
+
+        foreach (Rigidbody body in bodies)
+            body.AddForce(force * (Random.onUnitSphere + Vector3.up), ForceMode.VelocityChange);
     }
 }

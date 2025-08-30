@@ -1,13 +1,6 @@
 using System;
 using System.Collections;
-using System.Diagnostics.Eventing.Reader;
-using System.Reflection;
-using System.Threading;
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
-using static UnityEngine.Rendering.HighDefinition.WaterSurface;
 
 public struct GameMode {
     public enum Category { None, Plane, Heli }
@@ -41,20 +34,19 @@ public struct GameMode {
             _ => "None"
         };
 
-    public readonly System.Type GetManagerType() {
+    public readonly BaseModeManager GetManagerType() {
         return category switch { 
-            Category.Plane => typeof(PlaneGameManager),
-            Category.Heli => typeof(HeliGameManager),
+            Category.Plane => ScriptableObject.CreateInstance<PlaneGameManager>(),
+            Category.Heli => ScriptableObject.CreateInstance<HeliGameManager>(),
             _ => null
         };
     }
 }
 
-public class GameManager : MonoBehaviour {
-    //singleton
-    [HideInInspector] public static GameManager Instance { get; private set; }
+public class GameManager : MonoBehaviour {    
+    //Singleton
+    public static GameManager Instance { get; private set; }
 
-    [HideInInspector] public enum ManagerTypes { Heli, Plane };
 
     [Tooltip("Running Variables")]
     public bool isPaused = false;
@@ -62,23 +54,21 @@ public class GameManager : MonoBehaviour {
 
     [Header("Game Important Variables")]
     public GameMode selectedGameMode = GameMode.None;
-    public GameManager currentManager;
-    public GameObject[] modes;
-    public GameObject[] uiSettings;
-    [SerializeField] public float timeMax = 300f;
+    public BaseModeManager currentModeManager;
 
     public void SetGameManager(GameMode gameMode) {
+        selectedGameMode = gameMode;
         var managerType = gameMode.GetManagerType();
         if (managerType != null)
-            currentManager = (GameManager)FindFirstObjectByType(managerType);
+            currentModeManager = managerType;
+        if (currentModeManager is HeliGameManager)
+            UI.Instance.SetHeliUI();
+        else
+            UI.Instance.SetPlaneUI();
     }
 
-
-
-
-    void Awake()
-    {
-        //singleton code
+    void Awake() {
+        //Singleton code
         if (Instance != null && Instance != this)
             Destroy(gameObject);
         else
@@ -90,24 +80,31 @@ public class GameManager : MonoBehaviour {
         //EventSystem.current.SetSelectedGameObject(pauseButton);
     }
 
-    void Update() { currentManager?.Update(); }
+    void Update() { 
+        if (currentModeManager)
+            currentModeManager.ModeUpdate(); 
+    }
 
-    void Start()
-    {
-        EnableGameMode(selectedGameMode);
+    void Start() {
+        //EnableGameMode(selectedGameMode);
         //ResumeGame();
     }
 
-    void EnableGameMode(GameMode gameMode) {
-        for (int i = 0; i < modes.Length; i++) {
-            modes[i].SetActive(gameMode.ToString() == modes[i].name);
-            uiSettings[i].SetActive(gameMode.ToString() == uiSettings[i].name);
-        }
+    public void EnableGameMode(GameMode gameMode) {
         if (gameMode.category == GameMode.Category.Heli && gameMode.AsHeli == GameMode.HeliMode.FreeFlight) {
             //TODO: Also fix
             //objectivesMenu.SetActive(false);
             //TEMP FIX I think
-            UI.Instance.gameModeUI.gameObject.SetActive(false);
+            //UI.Instance.gameModeUI.gameObject.SetActive(false);
+        }
+    }
+
+    public void StartGameMode() {
+        if (currentModeManager is HeliGameManager heliManager) {
+            for (int i = 0; i < heliManager.modes.Length; i++) {
+                heliManager.modes[i].SetActive(selectedGameMode.ToString() == heliManager.modes[i].name);
+                heliManager.uiSettings[i].SetActive(selectedGameMode.ToString() == heliManager.uiSettings[i].name);
+            }
         }
     }
 
@@ -128,25 +125,23 @@ public class GameManager : MonoBehaviour {
         Cursor.lockState = CursorLockMode.Confined;
     }
 
-    public void Stop()
-    {
+    public void Stop() {
         isPaused = true;
         Time.timeScale = 0;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
     }
 
-    public void ResumeGame()
-    {
+    public void ResumeGame() {
         UI.Instance.UnPause();
 
         UI.Instance.titleMenus[(int)TitleMenuIndex.SETTINGS].SetActive(false);
         isPaused = false;
-        UI.Instance.pauseBackground.SetActive(true);
+        UI.Instance.pauseBackground.SetActive(false);
         UI.Instance.generalMenus[(int)GeneralMenuIndex.PAUSE].SetActive(isPaused);
         Time.timeScale = 1;
         Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     public void Continue()
@@ -158,13 +153,11 @@ public class GameManager : MonoBehaviour {
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    public virtual void ResetVals() { }
-
-    public void CallWinGame() { StartCoroutine(currentManager?.WinGame()); }
+    public void CallWinGame() { StartCoroutine(currentModeManager?.WinGame()); }
 
     public virtual IEnumerator WinGame() { yield break; }
 
-    public void CallLoseGame() { StartCoroutine(currentManager?.LoseGame()); }
+    public void CallLoseGame() { StartCoroutine(currentModeManager?.LoseGame()); }
 
     public virtual IEnumerator LoseGame() { yield break; }
 }

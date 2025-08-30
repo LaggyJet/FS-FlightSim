@@ -5,8 +5,9 @@ using UnityEngine;
 public class MissileLauncher : MonoBehaviour {
     public static MissileLauncher Instance { get; private set; }
 
-    [SerializeField] GameObject missile, warningTextContainter;
-    [SerializeField] TMP_Text warningText, countdownText;
+    [SerializeField] GameObject missile;
+    GameObject warningTextContainter;
+    TMP_Text warningText, countdownText;
     [SerializeField] float warningDuration = 5f;
 
     GameObject target, activeMissile;
@@ -17,6 +18,10 @@ public class MissileLauncher : MonoBehaviour {
             Destroy(gameObject);
         else
             Instance = this;
+
+        warningTextContainter = UI.Instance.warningTextContainer;
+        warningText = UI.Instance.warningText;
+        countdownText = UI.Instance.countdownText;
     }
 
     void SpawnMissile() {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(AudioSource))]
 public class HelicopterController : MonoBehaviour {
     [SerializeField] float liftForce = 500f, descendForce = 500f, floatForce = 40f, rotationSpeed = 50f;
     [SerializeField] float maxXRotation = 30f, maxZRotation = 45f, forwardSpeed = 800f;
@@ -89,7 +90,7 @@ public class HelicopterController : MonoBehaviour {
     void OnLeanRight(InputValue value) { isLeaningRight = value.isPressed; }
 
     void OnTurnOn() {
-        if (GameManager.Instance.currentManager is HeliGameManager heliManager)
+        if (GameManager.Instance.currentModeManager is HeliGameManager heliManager)
             heliManager.startedGame = true;
             AudioController.Instance.PlayAudio(AudioController.LevelTypes.Heli);
             if (!isSpinningDown && currentRotorSpeed < maxRotorSpeed && !isSpinningUp) {
@@ -100,7 +101,7 @@ public class HelicopterController : MonoBehaviour {
     }
 
     void OnShutdown() { 
-        if (currentRotorSpeed > 0f && !isSpinningUp && isGrounded && GameManager.Instance.currentManager is HeliGameManager heliManager) { 
+        if (currentRotorSpeed > 0f && !isSpinningUp && isGrounded && GameManager.Instance.currentModeManager is HeliGameManager heliManager) { 
             isSpinningDown = true;
             if (heliManager.finishedObjectives)
                 GameManager.Instance.CallWinGame();
@@ -162,13 +163,18 @@ public class HelicopterController : MonoBehaviour {
             handler.partType = HelicopterPartCollisionHandler.PartType.SkiR;
     }
 
+    bool exploded = false;
+    int cntr = 0;
+
     public void Explode() {
+        Debug.Log($"counter at {++cntr}");
+
         AudioController.Instance.PlayAudio(AudioController.LevelTypes.Crash);
         GameObject destroyedHeli = Instantiate(destroyedHeliPrefab, transform.position, transform.rotation);
         CameraFollow.Instance.ChangeTarget(destroyedHeli.transform);
-        ObjectHelper.Explode(destroyedHeli);
-        GameManager.Instance.CallLoseGame();
         Destroy(gameObject);
+        ObjectHelper.ExplodeObject(destroyedHeli, 3.0f);
+        GameManager.Instance.CallLoseGame();
     }
 
     public void HandlePartCollision(HelicopterPartCollisionHandler.PartType partType, Collider collision) {
@@ -197,7 +203,7 @@ public class HelicopterController : MonoBehaviour {
             skiRLanded = true;
         else if (skiPart == HelicopterPartCollisionHandler.PartType.SkiL) 
             skiLLanded = true;
-        if (skiRLanded && skiLLanded && GameManager.Instance.currentManager is HeliGameManager heliManager) {
+        if (skiRLanded && skiLLanded && GameManager.Instance.currentModeManager is HeliGameManager heliManager) {
             bool wasCompleted = false;
             int objectIndex = -1;
             var gObject = heliManager.objectivesCompleted;
@@ -209,7 +215,7 @@ public class HelicopterController : MonoBehaviour {
                 }
             }
             if (!wasCompleted) {
-                UIUpdater.Instance.UpdateCurrentObjectiveScore();
+                UI.Instance.UpdateCurrentHeliObjectiveScore();
                 heliManager.objectivesCompleted[objectIndex] = Tuple.Create(gObject[objectIndex].Item1, true);
                 heliManager.objectiveAccuries[objectIndex] = ScoreChecker.GetHeliPadAccuracy(transform.position.x - collision.transform.position.x, transform.position.z - collision.transform.position.z);
                 heliManager.accuracy = ScoreChecker.GetOverallAccuracy(heliManager.objectiveAccuries);

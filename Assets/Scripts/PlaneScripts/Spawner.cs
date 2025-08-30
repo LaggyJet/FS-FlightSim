@@ -10,7 +10,7 @@ public class Spawner : MonoBehaviour
     
     void Update() 
     {
-        if (GameManager.Instance.currentManager is PlaneGameManager planeManager)
+        if (GameManager.Instance.currentModeManager is PlaneGameManager planeManager)
         {
             if (enemySpawner && planeManager.enemies >= planeManager.enemiesMax) return;
             else if (!enemySpawner && planeManager.friendlies >= planeManager.friendliesMax) return;

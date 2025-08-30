@@ -117,7 +117,7 @@ public class PlaneController : MonoBehaviour
     
     private void Update()
     {
-        if (StartedPlaying() && initialCall && GameManager.Instance.currentManager is PlaneGameManager planeManager) { planeManager.runTimer = true; initialCall = false; }
+        if (StartedPlaying() && initialCall && GameManager.Instance.currentModeManager is PlaneGameManager planeManager) { planeManager.runTimer = true; initialCall = false; }
         if(firing) {  weapons.Fire(this.gameObject); ammoMain--; ammoSecondary--; }
             
         HandleInputs();

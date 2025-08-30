@@ -3,12 +3,12 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 using Cursor = UnityEngine.Cursor;
 
-public class HeliGameManager : GameManager {
-    [Header("Heli Stuff")]
-    [SerializeField] TMP_Text loseCurTime, winTimeSpent, winAccAvg, winTimeAvg, winTotalAvg;
+[CreateAssetMenu(fileName = "Heli Manager", menuName = "GameManagers/Heli Manager")]
+public class HeliGameManager : BaseModeManager {
+    public TMP_Text loseCurTime, winTimeSpent, winAccAvg, winTimeAvg, winTotalAvg;
+
     public Tuple<GameObject, bool>[] objectivesCompleted;
     public float[] objectiveAccuries;
     public float accuracy = 0f;
@@ -16,7 +16,18 @@ public class HeliGameManager : GameManager {
     public bool startedGame = false;
     public bool finishedObjectives = false;
 
-    void Update() {
+
+
+    public GameObject curObjectiveObject;
+    public TMP_Text curObjectiveText;
+    public int curObjectiveMax, curScore = 0;
+    public GameObject[] modes;
+    public GameObject[] uiSettings;
+
+
+
+
+    public override void ModeUpdate() {
         if (startedGame)
             overallTime += Time.deltaTime;
     }
@@ -34,8 +45,8 @@ public class HeliGameManager : GameManager {
         Time.timeScale = 0;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
-        UI.Instance.gameModeUI.gameObject.SetActive(false);
         UI.Instance.heliMenus[(int)HeliMenuIndex.WIN].SetActive(true);
+        UI.Instance.heliObjectives[0].transform.parent.gameObject.SetActive(false);
     }
 
     public override IEnumerator LoseGame() {
@@ -47,8 +58,9 @@ public class HeliGameManager : GameManager {
         Time.timeScale = 0;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
-        UI.Instance.gameModeUI.gameObject.SetActive(false);
+        UI.Instance.warningTextContainer.SetActive(false);
         UI.Instance.heliMenus[(int)HeliMenuIndex.LOSE].SetActive(true);
+        UI.Instance.heliObjectives[0].transform.parent.gameObject.SetActive(false);
     }
 
     public override void ResetVals() {

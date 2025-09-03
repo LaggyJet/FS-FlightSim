@@ -90,7 +90,7 @@ public class AudioController : MonoBehaviour {
                 heliLevelAudioSource.PlayOneShot(heliCrash);
                 break;
             case LevelTypes.Heli:
-                heliLevelAudioSource.volume = .75f;
+                heliLevelAudioSource.volume = .2f;
                 heliLevelAudioSource.clip = heliBlades;
                 heliLevelAudioSource.loop = true;
                 heliLevelAudioSource.Play();
@@ -101,4 +101,6 @@ public class AudioController : MonoBehaviour {
     public void DecreaseAudio(int amount) { backgroundAudioSource.volume -= amount/100.0f; }
 
     public void IncreaseAudio(int amount) { backgroundAudioSource.volume += amount/100.0f; }
+
+    public void SetBackgroundAudioVolume(float newVolume) { backgroundAudioSource.volume = newVolume; }
 }

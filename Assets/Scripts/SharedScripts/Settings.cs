@@ -44,7 +44,10 @@ public class Settings : MonoBehaviour {
     }
 
     //Resolution Info
-    public void SetRes(int resIndex) { Screen.SetResolution(Screen.resolutions[resIndex].width, Screen.resolutions[resIndex].height, Screen.fullScreen); }
+    public void SetRes() {
+        int resIndex = resDropDown.value;
+        Screen.SetResolution(Screen.resolutions[resIndex].width, Screen.resolutions[resIndex].height, Screen.fullScreen); 
+    }
 
     //Music Volume
     public void SetBackgroundVolume() {

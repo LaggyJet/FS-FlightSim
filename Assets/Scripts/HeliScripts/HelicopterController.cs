@@ -164,11 +164,11 @@ public class HelicopterController : MonoBehaviour {
     }
 
     bool exploded = false;
-    int cntr = 0;
 
     public void Explode() {
-        Debug.Log($"counter at {++cntr}");
-
+        if (exploded)
+            return;
+        exploded = true;
         AudioController.Instance.PlayAudio(AudioController.LevelTypes.Crash);
         GameObject destroyedHeli = Instantiate(destroyedHeliPrefab, transform.position, transform.rotation);
         CameraFollow.Instance.ChangeTarget(destroyedHeli.transform);

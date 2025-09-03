@@ -12,7 +12,6 @@ public class UI : MonoBehaviour {
     [Header("UI Variables")]
     [SerializeField] GameObject planeLevelTimer;
     public GameObject pauseBackground;
-    [SerializeField] TMP_Text heliScorePlaceholder;
     [SerializeField] TMP_Text timerTime;
     [SerializeField] TMP_Text enemyKills;
     [SerializeField] TMP_Text friendlyKills;

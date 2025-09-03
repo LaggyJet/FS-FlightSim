@@ -1,19 +1,26 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class ObjectHelper : MonoBehaviour {
+public static class ObjectHelper {
     static public void ExplodeObject(GameObject gameObject, float force) {
-        MeshFilter[] mf = gameObject.transform.GetComponentsInChildren<MeshFilter>();
+        if (!gameObject)
+            return;
 
-        List<Rigidbody> bodies = new();
+        MeshFilter[] mf = gameObject.GetComponentsInChildren<MeshFilter>();
+        List<Rigidbody> bodies = new(mf.Length);
         foreach (MeshFilter child in mf) {
-            Rigidbody rb = child.AddComponent<Rigidbody>();
+            MeshCollider mc = child.GetComponent<MeshCollider>();
+            if (!mc)
+                mc = child.gameObject.AddComponent<MeshCollider>();
+            mc.convex = true;
+
+            Rigidbody rb = child.GetComponent<Rigidbody>();
+            if (!rb)
+                rb = child.gameObject.AddComponent<Rigidbody>();
             rb.useGravity = true;
-            child.AddComponent<MeshCollider>().convex = true;
+            
             bodies.Add(rb);
         }
-
 
         foreach (Rigidbody body in bodies)
             body.AddForce(force * (Random.onUnitSphere + Vector3.up), ForceMode.VelocityChange);

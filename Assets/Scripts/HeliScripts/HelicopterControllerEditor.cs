@@ -1,11 +1,13 @@
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-[CustomEditor(typeof(HelicopterController))]
-public class HelicopterControllerEditor : Editor {
-    public override void OnInspectorGUI() {
-        base.OnInspectorGUI();
-        if (Application.isPlaying && GUILayout.Button("Destroy"))
-            ((HelicopterController)target).Explode();
+    [CustomEditor(typeof(HelicopterController))]
+    public class HelicopterControllerEditor : Editor {
+        public override void OnInspectorGUI() {
+            base.OnInspectorGUI();
+            if (Application.isPlaying && GUILayout.Button("Destroy"))
+                ((HelicopterController)target).Explode();
+        }
     }
-}
+#endif

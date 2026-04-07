@@ -64,13 +64,14 @@ public class HelicopterController : MonoBehaviour {
             tailRotor.Rotate(Vector3.right, currentRotorSpeed * Time.deltaTime);
         }
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, zRotation);
+        
         if (Physics.Raycast(transform.position, -Vector3.up, out RaycastHit hit, 2, helipadMask))
             PlatformController.singleton.Heave = Mathf.Lerp(PlatformController.singleton.Heave, ScoreChecker.Map((transform.position - hit.point).magnitude, 0.18f, 2.0f, -8f, 16f), 0.03f);
         else
             PlatformController.singleton.Heave = 0f;
-        PlatformController.singleton.Pitch = xRotation * 0.4f;
-        PlatformController.singleton.Yaw = Mathf.Lerp(PlatformController.singleton.Yaw, isMovingLeft ? -12 : isMovingRight ? 12 : 0, 0.05f);
-        PlatformController.singleton.Roll = -zRotation * 0.3f;
+        //PlatformController.singleton.Pitch = xRotation * 0.4f;
+        //PlatformController.singleton.Yaw = Mathf.Lerp(PlatformController.singleton.Yaw, isMovingLeft ? -12 : isMovingRight ? 12 : 0, 0.05f);
+        //PlatformController.singleton.Roll = -zRotation * 0.3f;
     }
 
     void OnUp(InputValue value) { isMovingUp = value.isPressed; isGrounded = false; }

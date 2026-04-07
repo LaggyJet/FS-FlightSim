@@ -192,15 +192,19 @@ public class SerialThreadIO : MonoBehaviour
                 {
                     if (outputByteQueue.Count > 0)
                     {
+                        String t = "!";
                         serialPort.Write("!");
                         lock (queueLock)
                         {
                             byte[] bytes = outputByteQueue.Dequeue();
-                            //Debug.Log(bytes.Length);
+                            foreach (byte b in bytes)
+                                t += b;
                             serialPort.Write(bytes, 0, bytes.Length);
 
                         }
                         serialPort.Write("#");
+                        t += "#";
+                        Debug.Log(t);
                     }
                 }
 
